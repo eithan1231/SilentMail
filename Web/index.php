@@ -32,7 +32,6 @@ if(!config['developmentMode']) {
 }
 
 $route = new router(config['dirFromRoot']);
-$route->setGlobalQueryString('test=xx');
 
 
 
