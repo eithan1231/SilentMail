@@ -1,0 +1,25 @@
+#auth-screen {
+	margin-top: 70px;
+	margin-left: 70px;
+}
+
+
+/** Login template */
+#template-login {
+	max-width: 400px;
+	max-height: 540px;
+}
+#template-login > #misc-container {
+	margin-bottom: 6px;
+}
+#misc-container > .sub-container {
+	margin-bottom: 7px;
+}
+.sub-container > #auth-status {
+	font-size: 15px;
+}
+
+#template-security-check {
+	max-width: 400px;
+	max-height: 540px;
+}

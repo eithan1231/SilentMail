@@ -1,0 +1,260 @@
+body {
+	padding: 0px;
+	margin: 0px;
+	background-color: #ecf3f5;
+}
+
+.txt-white {
+	color: #f5f5f5;
+}
+
+.input-textbox {
+	width: 90%;
+	border: solid;
+	border-width: 1px;
+	border-color: #bbbbbb;
+	padding: 5px;
+}
+.input-textbox:hover {
+	border-color: white;
+}
+
+/**
+* lp(landing page) top
+*/
+#lp-top {
+	width: 100%;
+	padding-bottom: 290px;
+}
+#lp-top-nav {
+	height: 47px;
+	width: 100%;
+	margin-bottom: 100px;
+}
+@media screen and (max-width: 600px) {
+	/* small screen */
+
+
+	/* button for top nav */
+	#lp-top-nav > .lp-top-nav-button {
+		padding: 5px;
+		background-color: gray;
+	}
+
+	#lp-top-nav > .normal {
+		background-color: gray;
+	}
+
+	#lp-top-nav > .other {
+		background-color: #717171;
+	}
+
+	#lp-top-nav > .lp-top-nav-button > .text {
+		left: 50%;
+	}
+
+	/* description container */
+	#lp-top-description {
+		padding: 50px;
+	}
+
+	/* Registration container */
+	#lp-register {
+		display: none;
+	}
+
+	/* Logged in misc view */
+	#lp-logged-in-misc {
+		display: none;
+	}
+}
+@media screen and (min-width: 600px) {
+	/* larger screen */
+
+
+	/* button for top nav */
+	#lp-top-nav > .lp-top-nav-button {
+		float: left;
+		margin: 6px;
+		padding: 5px;
+	}
+
+	/* description container */
+	#lp-top-description {
+		/*width: 36%;
+		margin-left: 16%;*/
+		display: inline-grid;
+		padding: 50px;
+		border-radius: 11px;
+	}
+
+	@media screen and (min-width: 1200px) {
+		/* larger */
+
+		#lp-top-description {
+			width: 36%;
+			margin-left: 16%;
+		}
+
+		/* Registration container */
+		#lp-register {
+			float: right;
+			margin-right: 16%;
+			width: 20%;
+
+			background: linear-gradient(140deg, #7cc0ce, #b8d8e5);
+			padding: 20px;
+			border-radius: 5px;
+		}
+
+		/* Logged in misc view */
+		#lp-logged-in-misc {
+			float: right;
+			margin-right: 16%;
+			width: 20%;
+
+			background: linear-gradient(140deg, #7cc0ce, #b8d8e5);
+			padding: 20px;
+			border-radius: 5px;
+		}
+	}
+
+	@media screen and (max-width: 1200px) {
+		/* smaller */
+
+		#lp-top-description {
+			width: 70%;
+			margin-left: 10%;
+		}
+
+		/* Registration container */
+		#lp-register {
+			display: none;
+		}
+
+		/* Logged in misc view */
+		#lp-logged-in-misc {
+			display: none;
+		}
+	}
+}
+#lp-top-nav > .lp-top-nav-button > .text {
+	color: #fff4f4;
+	text-decoration: none;
+}
+#lp-top-description {
+	background-color: #c7c6c630;
+}
+#lp-top-description > #lp-top-description-title {
+	color: #f5f5f5;
+}
+#lp-top-description > #lp-top-description-paragraph {
+	color: #f5f5f5;
+}
+
+/* Notifications */
+#notification-dropdown {
+	padding: 4px;
+	width: 140px;
+	background-color: #6fb2bb;
+	border-radius: 3px;
+}
+#notification-dropdown > .item {
+	padding: 3px;
+	background-color: #d5f3f7ba;
+}
+#notification-dropdown > .item-top {
+	margin-bottom: 1px;
+	border-top-left-radius: 2px;
+	border-top-right-radius: 2px;
+}
+#notification-dropdown > .item-bottom {
+	margin-top: 1px;
+	border-bottom-left-radius: 2px;
+	border-bottom-right-radius: 2px;
+}
+#notification-dropdown > .item-middle {
+	margin-top: 1px;
+	margin-bottom: 1px;
+}
+#notification-dropdown > .item > .text {
+	font-size: 13px;
+	text-decoration: none;
+	color: #2756da;
+}
+
+
+/**
+* LP section
+*/
+.lp-section {
+	margin-top: 30px;
+	padding-left: 16%;
+	padding-right: 16%;
+	padding-top: 30px;
+	overflow: hidden;
+}
+.invert {
+	background-color: #eff7f9;
+}
+
+/**
+* 3 spot thingos. fuk u var naming.
+*/
+@media screen and (min-width: 760px) {
+	.lp-section-3div {
+		float: left;
+		padding: 7px;
+		width: 30%;
+		min-height: 15px;
+	}
+	.lp-section-3div > .image {
+		width: 40px;
+	}
+}
+@media screen and (max-width: 760px) {
+	.lp-section-3div {
+		padding: 7px;
+		margin-top: 30px;
+		width: 100%;
+		min-height: 15px;
+	}
+	.lp-section-3div > .image {
+		width: 40px;
+	}
+}
+
+
+/**
+* vMail section
+*/
+#vmail-header {
+
+}
+@media screen and (max-width: 600px) {
+	/* small screens*/
+	.vmail-sub-header {
+		margin-top: 15px;
+	}
+}
+@media screen and (min-width: 600px) {
+	/* large screens */
+	.vmail-sub-header {
+		margin-top: 40px;
+		margin-left: 15px;
+	}
+
+	.vmail-paragraph {
+		margin-left: 30px;
+		max-width: 400px;
+	}
+}
+
+
+/**
+* Footer
+*/
+#footer {
+	width: 100%;
+	height: 30px;
+}

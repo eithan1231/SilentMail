@@ -1,0 +1,718 @@
+/**
+* ============ Header ============
+*/
+#header {
+	left: 0px;
+	right: 0px;
+	min-height: 100px;
+	max-height: 130px;
+	min-width: 1150px;
+	padding: 5px;
+	background: linear-gradient(#dcdcdc, #fbfbfb);
+}
+
+
+/**
+* ============ Search Container ============
+*/
+#header > #search-container {
+	/*position: fixed;*/
+	float: left;
+	margin-top: 35px;
+	margin-left: 54px;
+	width: 30%;
+}
+#search-container > #search-query {
+	width: 60%;
+	border: solid;
+	border-width: 1px;
+	border-top-left-radius: 4px;
+	border-bottom-left-radius: 4px;
+	border-color: #bbbbbb;
+	padding: 5px;
+}
+#search-container > #submit-button {
+	margin-left: -5px;
+	padding: 5px;
+	border-style: solid;
+	border-width: 1px;
+	border-top-right-radius: 4px;
+	border-bottom-right-radius: 4px;
+	border-color: #bbbbbb;
+	color: #fbfbfb;
+	background: -webkit-linear-gradient(top, #4387fd, #4683ea);
+}
+#search-container > #submit-button:hover {
+	cursor: pointer;
+}
+
+/**
+* ============ User Container ============
+*/
+#header > #user-container {
+	margin-top: 15px;
+	float: left;
+	min-height: 30px;
+	min-width: 160px;
+	width: 130px;
+	padding: 3px;
+}
+#user-container > span {
+	font-size: 14px;
+}
+
+/**
+* ============ Notification Dropdown ============
+*/
+#notification-container {
+	margin-top: 16px;
+}
+#notification-container  > .text {
+	color: #2d2d2d;
+	cursor: pointer;
+	text-decoration: none;
+}
+#notification-container  > .text:hover {
+	text-decoration: underline;
+}
+#notification-container  > .text > .count {
+	font-size: 10px;
+	padding-top: 2px;
+	padding-bottom: 2px;
+	padding-left: 4px;
+	padding-right: 4px;
+	border-radius: 10px;
+	background-color: #ff5757;
+}
+#notification-dropdown {
+	position: fixed;
+	background-color: #c7c7c7;
+
+	width: 175px;
+	padding: 2px;
+	border-radius: 3px;
+}
+#notification-dropdown > .item {
+	padding: 4px;
+	margin: 3px;
+	background-color: #ececec69;
+	border-radius: 3px;
+}
+#notification-dropdown > .item > a > .item-text {
+	font-size: 14px;
+}
+
+
+/**
+* ============ Notification tab ============
+*/
+#template-notifications {
+
+}
+#template-notifications > .year {
+	margin-top: 40px
+}
+#template-notifications > .year > .text {
+
+}
+#template-notifications > .month {
+	margin-top: 26px;
+	margin-left: 20px;
+}
+#template-notifications > .month > .text {
+
+}
+
+#template-notifications > .item {
+	margin-top: 12px;
+	margin-left: 40px;
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: gray;
+	padding: 5px;
+}
+
+
+/**
+* ============ Main body (holds mailbox list, and other infromation) ============
+*/
+#body {
+	left: 0px;
+	right: 0px;
+	bottom: 0px;
+	width: 1150px;
+	min-width: 1150px;
+	min-height: 500px;
+	padding: 5px;
+	display: inline-block;
+}
+
+/**
+* ============ Settings Sidebar ============
+*/
+#body > #sidebar-settings {
+	float: left;
+	min-width: 205px;
+	height: 600px;
+}
+#sidebar-settings > .sidebar-item {
+	margin-left: 8px;
+	margin-top: 8px;
+}
+#sidebar-settings > .sidebar-item > .text {
+	color: #2d2d2d;
+	cursor: pointer;
+	text-decoration: none;
+}
+#sidebar-settings > .sidebar-item > .text:hover {
+	text-decoration: underline;
+}
+
+
+
+/**
+* ============ Tab container ============
+*/
+#body > #tab-container {
+	float: left;
+	margin: 15px;
+	margin-top: 0px;
+	min-width: 700px;
+}
+
+/**
+* ============ Tab Heading ============
+*/
+#tab-container > #tab-heading {
+	height: 47px;
+	margin: 0px;
+
+	border-style: solid;
+	border-color: #8c8c8c69;
+	border-width: 0px;
+	border-left-width: 1px;
+}
+#tab-heading > .selected {
+	border-width: 1px;
+	border-bottom-width: 0px;
+	background-color: transparent;
+}
+#tab-heading > .normal {
+	border-width: 1px;
+	border-bottom-width: 1px;
+	background-color: #ffffff;
+}
+#tab-heading > .normal:hover {
+	background-color: transparent;
+	background: linear-gradient(#f7f7f7, #ffffff);
+}
+#tab-heading > .tab-control {
+	float: left;
+	width: 200px;
+	height: 47px;
+	border-style: solid;
+	border-color: #8c8c8c69;
+	border-left-width: 0px;
+	margin-bottom: 1px;
+	cursor: pointer;
+}
+.tab-control > .tab-control-inner-div {
+	padding-top: 13px;
+	padding-left: 13px;
+}
+
+/**
+* ============ body of tabs ============
+*/
+#tab-container > #tab-body {
+	width: 900px;
+	margin-top: 9px;
+	border-style: solid;
+	border-width: 0px;
+	border-top-width: 1px;
+	border-color: #b3b3b3;
+}
+
+/**
+* ============ Mailbox Item ============
+*/
+#tab-body > .mailitem {
+	min-height: 20px;
+	padding: 5px;
+	padding-bottom: 2px;
+
+	border-style: solid;
+	border-color: #b3b3b3;
+	border-width: 0px;
+	border-bottom-width: 1px;
+}
+#tab-body > .normal {
+	background-color: #e6e6e673;
+}
+#tab-body > .seen {
+	background-color: #e6e5da73;
+}
+#tab-body > .mailitem:hover {
+	cursor: pointer;
+	background-color: #dadada73;
+}
+.mailitem > .checkbox-container {
+	float: left;
+	width: 50px;
+}
+.mailitem > .user-container {
+	float: left;
+	width: 240px;
+	min-width: 240px;
+	max-width: 240px;
+}
+.sender-container > .user-span {
+	font-size: 13px;
+	font-family: 'Roboto', sans-serif;
+}
+.mailitem > .subject-container {
+	float: left;
+	min-width: 240px;
+}
+.subject-container > .subject-span {
+	font-size: 14px;
+	font-family: 'Roboto', sans-serif;
+}
+.mailitem > .date-container {
+	margin-right: 4px;
+	width: 214px;
+	float: right;
+}
+.date-container > .date-span {
+	float: right;
+	font-size: 14px;
+	font-family: 'Roboto', sans-serif;
+}
+
+/**
+* Buttons for pages
+*/
+.page-button-container {
+	padding-top: 20px;
+	padding-bottom: 20px;
+}
+.page-button-container > .page-button {
+  cursor: pointer;
+  padding: 5px;
+  margin: 2px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  border-color: #5f5f5f;
+  color: #353535;
+  text-decoration: none;
+}
+.page-button-container > .current-page-button {
+	cursor: pointer;
+  padding: 5px;
+  margin: 2px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 2px;
+  border-color: black;
+  color: black;
+  text-decoration: none;
+}
+.page-button-container > .dot-dot-dot {
+	margin-left: 3px;
+	margin-right: 4px;
+}
+
+/**
+* ============ Componse new tab ============
+*/
+#componse-new {
+	padding: 20px;
+	width: 500px;
+}
+.input-seperator {
+	border-style: solid;
+	border-width: 0px;
+	border-bottom-width: 1px;
+	border-color: #b3b3b3;
+	width: 40%;
+}
+/* Compose Recipients */
+.input-div > #componse-recipients {
+	width: 60%;
+	border: solid;
+	border-width: 1px;
+	border-color: #bbbbbb;
+	padding: 5px;
+}
+.input-div > #componse-recipients:hover {
+	border-color: #949393;
+}
+/* Compose subject */
+.input-div > #componse-subject {
+	width: 60%;
+	border: solid;
+	border-width: 1px;
+	border-color: #bbbbbb;
+	padding: 5px;
+}
+.input-div > #componse-subject:hover {
+	border-color: #949393;
+}
+/* Compose body */
+.input-div > #componse-body {
+	width: 60%;
+	min-width: 60%;
+	max-width: 60%;
+	max-height: 300px;
+	min-height: 100px;
+	border: solid;
+	border-width: 1px;
+	border-color: #bbbbbb;
+	padding: 5px;
+}
+.input-div > #componse-body:hover {
+	border-color: #949393;
+}
+
+/**
+* ============ view message template ============
+*/
+#view-inbox-mail {
+	width: 100%;
+}
+
+/* Subject */
+#view-inbox-mail > #subject-container {
+	overflow: hidden;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	width: 100%;
+	border-width: 0px;
+	border-bottom: 1px;
+	border-style: solid;
+	border-color: #b3b3b3;
+}
+#subject-container > #subject {
+	margin-left: 15px;
+	overflow: hidden;
+	font-family: 'Roboto', sans-serif;
+	font-weight: normal;
+	font-size: 16px;
+}
+
+/* Sender*/
+#view-inbox-mail> #sender-container {
+	display: inline-block;
+	padding: 1px;
+	padding-top: 0px;
+	padding-left: 5px;
+	padding-right: 5px;
+}
+#sender-container > #sender {
+	font-size: 12px;
+}
+#sender > #name {
+	font-size: 13px;
+	font-weight: bolder;
+}
+
+/* Container for email body */
+#view-inbox-mail > #body-container {
+	margin-top: 32px;
+	margin-left: 7px;
+}
+
+/* Reply to message container */
+#view-inbox-mail > #reply-container {
+	width: 100%;
+
+	margin-top: 36px;
+	padding-top: 12px;
+
+	border-width: 0px;
+	border-top-width: 1px;
+	border-style: solid;
+	border-color: #b3b3b3;
+}
+#reply-container > div > #reply-body {
+	width: 60%;
+	max-width: 60%;
+	min-width: 60%;
+	max-height: 300px;
+	min-height: 80px;
+	border: solid;
+	border-width: 1px;
+	border-color: #bbbbbb;
+	padding: 5px;
+}
+#reply-container > div > #reply-body:hover {
+	border-color: #949393;
+}
+
+/* Attachments */
+#view-inbox-mail > #attachment-container {
+	height: auto;
+	width: 100%;
+
+	margin-top: 36px;
+	padding-top: 12px;
+	padding-bottom: 80px;
+
+	border-width: 0px;
+	border-top-width: 1px;
+	border-style: solid;
+	border-color: #b3b3b3;
+}
+#attachment-container > .attachment {
+	float: left;
+	margin-left: 11px;
+
+	width: 53px;
+	height: 90px;
+	min-height: 90px;
+
+	opacity: 0.8;
+}
+#attachment-container > .attachment:hover {
+	opacity: 1;
+}
+.attachment > a > .icon {
+	margin-bottom: 2px;
+}
+.attachment > a > .name {
+	font-size: 11px;
+}
+
+
+/**
+* ============ Access Logs ============
+*/
+#log-container {
+
+}
+#log-container > .log-header { /* log header */
+	margin-top: 45px;
+	margin-left: 5px;
+}
+#log-container > .log-header > .log-header-text {
+	font-size: 22px;
+	font-weight: lighter;
+}
+#log-container > .log-row { /* log row */
+	margin-left: 17px;
+	margin-top: 22px;
+	padding-left: 3px;
+
+	border-left-style: solid;
+	border-left-width: 1px;
+	border-left-color: #a2a2a2;
+}
+#log-container > .log-row > .column {
+	margin-top: 3px;
+}
+#log-container > .log-row > .column > .column-key {
+	float: left;
+	width: 140px;
+}
+#log-container > .log-row > .column > .column-value {
+
+}
+
+/**
+* ==============================================================================
+* Everything to do with virtual emails
+* ==============================================================================
+*/
+
+/* sidebar */
+#virtual-email-sidebar {
+	float: left;
+	border-radius: 3px;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+	width: 185px;
+	padding: 5px;
+}
+#virtual-email-sidebar > .item {
+	margin-top: 5px;
+}
+#virtual-email-sidebar > .item > .text {
+	font-size: 13;
+}
+#virtual-email-sidebar > .item > .text:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+
+/* body */
+#virtual-email-body {
+	float: left;
+	max-width: 700px;
+}
+
+/* Create new */
+#virtual-email-new-container {
+	width: 500px;
+	padding-top: 30px;
+}
+#virtual-email-new-container > .input-container {
+	margin-bottom: 16px;
+}
+#virtual-email-new-container > .input-container > .input-text {
+	width: 60%;
+	border: solid;
+	border-width: 1px;
+	border-right-width: 0px;
+	border-color: #bbbbbb;
+	padding: 5px;
+}
+#virtual-email-new-container > .input-container > .domain-text {
+	border: solid;
+	border-width: 1px;
+	border-left-width: 0px;
+	border-color: #bbbbbb;
+	background-color: #ffffff;
+	padding: 5px;
+	font-size: 13px;
+}
+#virtual-email-new-container > #virtual-email-new-status-container {
+	margin-top: 10px;
+	margin-bottom: 5px;
+}
+#virtual-email-new-status-container > #virtual-email-new-status {
+	font-size: 14px;
+}
+
+/* Manage */
+#virtual-email-info-container {
+	margin-top: 20px;
+	height: 40px;
+}
+.virtual-email-info-item-container {
+	margin-top: 5px;
+}
+.virtual-email-info-item-container > .name {
+	width: 90px;
+	float: left;
+}
+.virtual-email-info-item-container > .name > .text {
+
+}
+.virtual-email-info-item-container .value {
+	float: left;
+}
+.virtual-email-info-item-container > .value > .text {
+
+}
+#virtual-email-enable-container {
+	margin-top: 15px;
+}
+#virtual-email-enable-container > .vmail-disable-button {
+	cursor: pointer;
+	padding: 5px;
+	margin: 2px;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+	border-color: #fd4343;
+	color: #fbfbfb;
+	background: -webkit-linear-gradient(top,#fd4343,#ec3a3a);
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+#virtual-email-enable-container > .vmail-enable-button {
+	cursor: pointer;
+	padding: 5px;
+	margin: 2px;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 2px;
+	border-color: #4387fd;
+	color: #fbfbfb;
+	background: -webkit-linear-gradient(top,#4387fd,#4683ea);
+
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+/**
+* settings tab
+*/
+#settings-tab {
+	width: 100%;
+}
+#settings-tab > .settings-tab-sidebar {
+	float: left;
+	border-radius: 3px;
+	border-top-left-radius: 0px;
+	border-top-right-radius: 0px;
+	width: 185px;
+	padding: 5px;
+}
+#settings-tab > .settings-tab-sidebar > .item {
+	margin-top: 5px;
+}
+#settings-tab > .settings-tab-sidebar > .item > .text {
+	text-decoration: none;
+	color: #2d2d2d;
+}
+#settings-tab > .settings-tab-sidebar > .item > .text:hover {
+	text-decoration: underline;
+	cursor: pointer;
+}
+#settings-tab-body {
+	padding: 4px;
+	float: left;
+	width: 400px;
+}
+/* Preference sub-tab-page */
+#settings-tab-body > .preference-form {
+
+}
+#settings-tab-body > .preference-form > .checkbox-input-container {
+	cursor: help;
+	margin-top: 8px;
+}
+#settings-tab-body > .preference-form > .checkbox-input-container > .text {
+	font-size: 14px;
+}
+/* Password changer sub-tab page */
+#settings-tab-body > .password-change-container {
+	width: 100%;
+}
+#settings-tab-body > .password-change-container > .input-div > .text-container {
+	margin-bottom: 5px;
+}
+#settings-tab-body > .password-change-container > .input-div > .text-container > .text {
+	margin-left: -7px;
+	font-size: 13px;
+}
+#settings-tab-body > .password-change-container > .input-div {
+	width: 100%;
+	margin-top: 15px;
+}
+/* Password History page*/
+#settings-tab-body > .password-history {
+
+}
+#settings-tab-body > .password-history > .password-item {
+	margin-top: 15px;
+	padding: 5px;
+	border-left-style: solid;
+	border-left-color: black;
+	border-left-width: 1px;
+}
+#settings-tab-body > .password-history > .password-item > div > .text {
+	font-size: 14px;
+	font-family: monospace;
+}

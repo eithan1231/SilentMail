@@ -1,0 +1,68 @@
+
+@media screen and (max-width: 600px) {
+  /* Small */
+
+  .pp-header {
+
+  }
+  .pp-header > .pp-item {
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+
+  .pp-profile {
+    width: 100%;
+  }
+
+  .pp-profile > .pp-profile-image {
+    display: block;
+  }
+}
+@media screen and (min-width: 600px) {
+  /* Large */
+
+  .pp-header {
+    padding-left: 16%;
+    width: auto;
+  }
+  .pp-header > .pp-item {
+    text-decoration: none;
+    font-size: 14px;
+  }
+
+
+  .pp-profile {
+    margin-left: 16%;
+    padding-top: 128px;
+  }
+
+  .pp-profile > .pp-profile-image-container {
+    float: left;
+    width: 200px;
+    height: 200px;
+  }
+
+  .pp-profile > .pp-profile-image-container > .pp-profile-image {
+    border-radius: 100px;
+    border-style: solid;
+    border-width: 3px;
+  }
+
+  .pp-profile > .pp-profile-about-container {
+    float: left;
+  }
+
+  .pp-profile > .pp-profile-about-container > .pp-profile-name {
+    padding: 5px;
+    margin-left: 10px;
+  }
+
+  .pp-profile > .pp-profile-about-container > .pp-profile-name > .pp-profile-name-main-text {
+    font-size: 19px;
+  }
+
+  .pp-profile > .pp-about {
+    
+  }
+}

@@ -1,0 +1,87 @@
+1) (ETA: 7h) Blog
+	1.1) Interface part of things. Backend is for the most part complete, just need
+	user interactions to be done.
+
+2) (ETA: 2d) Sending mail.
+
+	2.1) We need to make it round robin all the out nodes. make it retry on a
+		different out node on failure
+
+	2.2) The C# sendmail executable very incomplete, finish it.
+
+3) (ETA: 2d) Rather than having 3 tables for different mail items (inbox, vinbox, outbox)
+	we should have a single table for storing mail, and just use an enum for the
+	'type' of mail item. This will be hard to do because the core is built around
+	the existing system.
+
+	3.1) Construct emails outside of memory.
+
+4) (ETA: 20m) Make a function to properly explode an email address list. (or
+	find a regex)
+
+5) (ETA: ???) Make use of hooks class. This should only really be done after
+	the project is complete. (Self Reminder: DOCUMENT EACH HOOK)
+
+6) (ETA: 3h) Contact me page for users. This could be like a publicly editable
+	profile page for all users. Can contain information for people to contact them
+	or w/e.
+
+	6.1) Settings page for editing things that can be found on profile page.
+
+DONE 7) (ETA: 50m) Add first name, and last name support. Will require me to edit
+	register function, user table, templates, and some javascript.
+
+8) (ETA: 2h) Email Obfuscation, Phone number obfuscation, obfuscation of all
+	easily identifiable strings in output.
+
+DONE 9) (ETA: 30m) Privacy Settings
+	9.1) Option to hide first and last name when sending mail
+		9.1.1) Maybe a smart detector? If user has a reference to his name in body,
+		attachment name, or something, disable the privacy setting? or maybe if the
+		recipient shares the same last name, disable the privacy setting?
+	9.2) More?
+
+DONE 10) (ETA: 5m) Censor sensitive information on exception logging backtraces.
+
+11) (ETA: 20m) Report slow queries to a server. (in sql.php)
+
+12) (ETA: 1h) Write more tests.
+
+13) (ETA: 1d) HTML Sanitizer.
+
+DONE 14) (ETA: 40m) Password template.
+
+15) (ETA: 3h) API and WebHooks
+
+16) (ETA: 8h) Administration Panel
+	16.1) Manage groups
+	16.2) Manage users
+		16.2.1) Virtual users
+		16.2.2) User files
+		16.2.3) Group (Assign new groups, or w/e)
+		16.2.4) Profile Page (Need to complete profile page first)
+		16.2.5) Attempted logins
+		16.2.6) API & WebHooks
+		16.2.7) IP Lookup
+		16.2.8) Session manager (Browse sessions. Disable them, enable them.)
+		16.2.9) Preferences, Settings, Password.
+		16.2.10) Notifications
+	16.3) Access nodes & out nodes
+	16.4) Blogs
+
+17) Page buttons, so you can go from one page to another. This is partally
+	complete, but it needs to look nicer, and needs to be easier to use. So
+	lets make a function in the misc class to construct page buttons with parameters,
+	and on callback we can have it render the button.
+
+18) Redo UI. Redesign the whole application to make it easier to make mobile
+	responsive. So, Make a standard CSS lib that can be used everywhere.
+
+19) Templating to CSS files. So we can access variables from PHP (useful for
+	backgrounds, colos, etc.)
+
+20) Settings
+	20.1) Profile picture. This profile picture must be 200 by 200 pixels. This
+	profile picture will also be shown on the profile page.
+
+21) URL sessions. Put the session in the url.
