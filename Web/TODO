@@ -86,7 +86,7 @@ DONE 14) (ETA: 40m) Password template.
 
 21) URL sessions. Put the session in the url.
 
-22) Cache. Have the expandability to implement redis, or other memory based
+DONE 22) Cache. Have the expandability to implement redis, or other memory based
 	key/value database engines. We also need to cache the rendering of pages
 	viewing mail items, so we dont reparse them all the time.... bad idea to
 	reparse...

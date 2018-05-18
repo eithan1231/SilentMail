@@ -48,3 +48,9 @@ define("microTime", microtime(true));
 define('alphabet', 'abcdefghijklmnopqrstuvwxyz');
 define('alphabetUpper', 'ABCDEFGHIJKLMNOPQRSTUVWXYZ');
 define('numbers', '1234567890');
+
+// cache modes.
+define('cache_mode_none', 0);
+define('cache_mode_file', 1);
+define('cache_mode_redis', 2);
+define('cache_mode_memcached', 3);

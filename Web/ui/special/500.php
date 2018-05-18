@@ -1,12 +1,7 @@
-<?php
-ob_start(function($buffer) {
-	// Poor mans minifier
-	return str_replace(["\r", "\n", "\t"], '', $buffer);
-}, 1024);
-?>
 <!DOCTYPE html>
-<html>
+<html lang="en" dir="ltr">
 	<head>
+		<meta charset="utf-8">
 		<title>Internal Error (500)</title>
 		<meta name="robots" content="noindex,nofollow">
 	</head>

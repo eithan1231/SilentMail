@@ -31,7 +31,28 @@ if(!config['developmentMode']) {
 	error_reporting(0);
 }
 
+// Caching engine
+$cache = null;
+switch(config['cache']['mode']) {
+	case cache_mode_file: {
+		global $cache;
+		$cache = new cache_file(
+			config['cache']['file']['dir'],
+			config['cache']['file']['duration']
+		);
+		break;
+	}
+
+	case cache_mode_none:
+	default: {
+		global $cache;
+		$cache = new cache_none();
+		break;
+	}
+}
+
 $route = new router(config['dirFromRoot']);
+
 
 
 
@@ -371,6 +392,26 @@ $route->registerGetRoute('blogPost', '/blog/{category}/{thread}', function($rout
 $route->registerGetRoute('robotsTxt', '/robots.txt', function($route, $p) {
 	header("Content-type: text/plain");
 	loadUi("robots_txt");
+});
+
+
+
+
+// =============================================================================
+// terms of service
+// =============================================================================
+$route->registerGetRoute('termsOfService', '/terms-of-service', function($route, $p) {
+	loadUi("terms_of_service");
+});
+
+
+
+
+// =============================================================================
+// terms of service
+// =============================================================================
+$route->registerGetRoute('contactUs', '/contact-us', function($route, $p) {
+	loadUi("contact_us");
 });
 
 

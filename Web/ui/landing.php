@@ -38,7 +38,7 @@ $notifications_count = is_array($notifications) ? count($notifications) : 0;
 
 				<?php if (ses_logged_in): ?>
 					<div class="lp-top-nav-button normal">
-						<a href="<?= router::instance()->getRoutePath("mail"); ?>" class="text">Mailbox</a>
+						<a href="<?= router::instance()->getRoutePath("mail") ?>" class="text">Mailbox</a>
 					</div>
 
 					<?php if ($notifications !== false): ?>
@@ -148,7 +148,7 @@ $notifications_count = is_array($notifications) ? count($notifications) : 0;
 						</div>
 
 						<!--<div class="sub-container">
-							<span style="font-size: 13px;">By clicking submit you agree to our <a href="#">Terms of Use</a></span>
+							<span style="font-size: 13px;">By clicking submit you agree to our <a href="<?= router::instance()->getRoutePath("termsOfService"); ?>">Terms of Service</a></span>
 						</div>-->
 					</div>
 

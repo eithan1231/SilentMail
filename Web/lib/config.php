@@ -16,10 +16,10 @@ define("config", [
 	* If you do not know what this means, leave it set to false. Being in
 	* development mode WILL result in you being vulnerable!
 	*/
-	'developmentMode' => false,
+	'developmentMode' => true,
 
 	/* Name of the session cookie. */
-	'sessionCookieName' => 'silentmail',
+	'sessionCookieName' => '__sesn',
 
 	/* Duration of security tokens in seconds. */
 	'securityTokenExpiry' => 60 * 60 * 24,
@@ -48,13 +48,58 @@ define("config", [
 	/**
 	* I would recommend this be false. It being true could be a security concern.
 	*/
-	'areQuerySessionsAllowed' => false,
+	'areQuerySessionsAllowed' => true,
+
+	/**
+	* Settings for cache.
+	*/
+	'cache' => [
+		/**
+		* The mode we want to cache with.
+		*
+		* Possible modes:
+		*		cache_mode_none - Default, no cache.
+		*		cache_mode_file - Stores cache in files.
+		*		cache_mode_redis - Stores cache with redis.
+		*		cache_mode_memcached - Stores cache with memcached.
+		*/
+		'mode' => cache_mode_file,
+
+		/**
+		* options fot the mode, cache_mode_file.
+		*/
+		'file' => [
+			/**
+			* The directory where we want to store cache.
+			*/
+			'dir' => WORK_DIR .'/cache',
+
+			/**
+			* The duration the cache stays valid.
+			*/
+			'duration' => time_day,
+		],
+
+		/**
+		* Options for the mode, cache_mode_redis.
+		*/
+		'redis' => [
+
+		],
+
+		/**
+		* Options for the mode, cache_mode_memcached.
+		*/
+		'memcached' => [
+
+		],
+	],
 
 	/**
 	* This will allow us to cache UI assets. Turning this off will disable
 	* minifying.
 	*/
-	'allowCache' => true,
+	'allowCache' => false,
 
 	/* Enables and disables the blog */
 	'blogEnabled' => true,
@@ -71,7 +116,7 @@ define("config", [
 	],
 
 	/* The domain that will be at the end of email addresses. */
-	'mailDomain' => '',
+	'mailDomain' => 'localhost',
 
 	/* List of resuted hosts, not connecting from one will result in page death */
 	'trustedHosts' => ['localhost', "127.0.0.1"],

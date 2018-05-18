@@ -4,6 +4,7 @@ class template
 {
 	public static function outputTemplate($template_name, $token)
 	{
+		global $cache;
 		if(templateToken !== $token) {
 			return false;
 		}
@@ -408,14 +409,18 @@ class template
 
 				$vbox_mode = isset($_GET['vbox_id']);
 				$inbox_id = intval($_GET['id']);
+				$vbox_id = -1;
 
 				if($vbox_mode) {
 					$vbox_id = intval($_GET['vbox_id']);
 				}
 
+				$cache_key = $cache->buildKey('inbox-item-body', [$vbox_mode, $inbox_id, $vbox_id]);
+				$cached = $cache->exists($cache_key);
+
 				$inboxy_item = ($vbox_mode
-					? vmailbox::getVBoxInboxItem($vbox_id, $inbox_id)
-					: mailbox::getInboxItem($inbox_id)
+					? vmailbox::getVBoxInboxItem($vbox_id, $inbox_id, ses_user_id, !$cached)
+					: mailbox::getInboxItem($inbox_id, ses_user_id, !$cached)
 				);
 
 				// making mail as read
@@ -428,7 +433,7 @@ class template
 
 				$body = "<h2 style=\"color: red;\">Unable to laod body</h2>";
 
-				if($inboxy_item['data']['mail']) {
+				if(!$cached && $inboxy_item['data']['mail']) {
 					$mail = &$inboxy_item['data']['mail'];
 					$mail_content_type = $mail->getContentType();
 
@@ -472,6 +477,12 @@ class template
 						$body_parts = $mail->getBodyParts();
 						$handleMultipart($body_parts);
 					}
+
+					// Storing in cache
+					$cache->store($cache_key, $body);
+				}
+				else if($cached) {
+					$body = $cache->get($cache_key);
 				}
 
 				?>

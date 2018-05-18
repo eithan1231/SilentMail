@@ -62,7 +62,9 @@ class sql
 		}
 
 		if($start_time > 2 && config['reportSlowQueries']) {
-			// TODO: Report slow query
+			shutdown_events::register(function() {
+				// TODO: Write slow query reporter.
+			});
 		}
 
 		sql::$query_history[] = [
