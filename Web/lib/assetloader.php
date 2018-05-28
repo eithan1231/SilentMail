@@ -16,7 +16,7 @@ class assetloader
 			return false;
 		}
 
-		if($router === false) {
+		if($router === false || is_null($router)) {
 			$router = router::instance();
 		}
 
@@ -166,6 +166,7 @@ class assetloader
 			return 'data:'. assetloader::getExtensionMimeType($extension) .';base64,'. base64_encode($content);
 		}
 		else {
+			trigger_error("Failed to read asset from, {$asset_path}");
 			return false;
 		}
 	}
@@ -177,7 +178,7 @@ class assetloader
 	{
 		$files = scandir($cache_directory, SCANDIR_SORT_NONE);
 		foreach($files as $file) {
-			if($file == '.' || $file == '..') {
+			if($file[0] == '.') {
 				continue;
 			}
 

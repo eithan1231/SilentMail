@@ -327,3 +327,34 @@ function esc($in, $flags = ENT_QUOTES | ENT_HTML5, $encoding = default_encoding,
 {
 	return htmlspecialchars($in, $flags, $encoding, $double_encode);
 }
+
+/**
+* Hashes an array
+*/
+function hashArray($algo, $array)
+{
+	$handleArray = function($_array) use($handleArray)
+	{
+		$ret = '{';
+		foreach ($_array as $key => $value) {
+			if(is_array($value)) {
+				$ret .= "{$key}: ". $handleArray($value) .",";
+			}
+			if(is_null($value)) {
+				$ret .= "{$key}: NULL,";
+			}
+			if(is_numeric($value)) {
+				$ret .= "{$key}: {$value},";
+			}
+			if(is_string($value)) {
+				$ret .= "{$key}: \"". addslashes($value) ."\",";
+			}
+			if(is_bool($vale)) {
+				$ret .= "{$key}: ". ($value ? 'true' : 'false') .",";
+			}
+		}
+		$ret .= '}';
+	};
+
+	return hash($algo, $handleArray($array));
+}

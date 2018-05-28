@@ -1092,62 +1092,85 @@ class template
 					return false;
 				}
 
-				$password_history = user::getPasswordHistory();
 				$technical_mode = preferences::getPreference('technical_mode');
 
-				?>
-				<h2 class="noselect">Password History</h2>
+				$cache_key = $cache->buildKey("ui-pw-history");
+				$html_content = $cache->get($cache_key);
 
-				<div class="password-history">
-					<?php if ($password_history['success']): ?>
-						<?php foreach ($password_history['data'] as $history_index): ?>
-							<?php
-							$user_agent = new user_agent($history_index['user_agent']);
-							$browser = $user_agent->getBrowser();
-							$browser_version = $user_agent->getVersion();
-							$platform = $user_agent->getPlatform();
-							?>
-							<div class="password-item">
-								<!-- <?= $history_index['__index__'] ?> -->
-								<div>
-									Set <span><?= esc(time::formatFromPresent($history_index['date'])) ?></span>
-								</div>
+				if($html_content) {
+					// Cached
+					echo $html_content;
+				}
+				else {
+					// Not cache_dir
+					$password_history = user::getPasswordHistory();
 
-								<div style="margin-top: 8px;"></div>
+					ob_start(function($buf) use(&$html_content) {
+						$html_content .= $buf;
+						return $buf;
+					});
 
-								<div>
-									 Country: <span class="text"><?= esc(geo::getCountry($history_index['ip'])) ?></span>
-								</div>
+					?>
+					<h2 class="noselect">Password History</h2>
 
-								<div>
-									Bowser: <span class="text"><?= esc($browser) ?><?= $technical_mode ? '/'. esc($browser_version) : '' ?></span>
-								</div>
-
-								<?php if ($platform !== null && strlen($platform) > 1): ?>
+					<div class="password-history">
+						<?php if ($password_history['success']): ?>
+							<?php foreach ($password_history['data'] as $history_index): ?>
+								<?php
+								$user_agent = new user_agent($history_index['user_agent']);
+								$browser = $user_agent->getBrowser();
+								$browser_version = $user_agent->getVersion();
+								$platform = $user_agent->getPlatform();
+								?>
+								<div class="password-item">
+									<!-- <?= $history_index['__index__'] ?> -->
 									<div>
-										Platform: <span class="text"><?= esc($platform) ?></span>
+										Set <span><?= esc(time::formatFromPresent($history_index['date'])) ?></span>
 									</div>
 
-								<?php endif; ?>
-
-								<?php if ($technical_mode): ?>
-									<div style="margin-top: 5px;"></div>
+									<div style="margin-top: 8px;"></div>
 
 									<div>
-										IP Address (Technical): <span class="text"><?= esc($history_index['ip']) ?></span>
+										 Country: <span class="text"><?= esc(geo::getCountry($history_index['ip'])) ?></span>
 									</div>
 
 									<div>
-										User Agent (Technical): <span class="text noselect" title="<?= esc($history_index['user_agent']) ?>"><?= esc(str_smallify($history_index['user_agent'], 25)) ?></span>
+										Bowser: <span class="text"><?= esc($browser) ?><?= $technical_mode ? '/'. esc($browser_version) : '' ?></span>
 									</div>
-								<?php endif; ?>
-							</div>
-						<?php endforeach; ?>
-					<?php else: ?>
-						<h3 lass="noselect">No Password Chanes Found</h3>
-					<?php endif; ?>
-				</div>
-				<?php
+
+									<?php if ($platform !== null && strlen($platform) > 1): ?>
+										<div>
+											Platform: <span class="text"><?= esc($platform) ?></span>
+										</div>
+
+									<?php endif; ?>
+
+									<?php if ($technical_mode): ?>
+										<div style="margin-top: 5px;"></div>
+
+										<div>
+											IP Address (Technical): <span class="text"><?= esc($history_index['ip']) ?></span>
+										</div>
+
+										<div>
+											User Agent (Technical): <span class="text noselect" title="<?= esc($history_index['user_agent']) ?>"><?= esc(str_smallify($history_index['user_agent'], 25)) ?></span>
+										</div>
+									<?php endif; ?>
+								</div>
+							<?php endforeach; ?>
+						<?php else: ?>
+							<h3 lass="noselect">No Password Chanes Found</h3>
+						<?php endif; ?>
+					</div>
+					<?php
+
+					// Getting the content.
+					ob_end_clean();
+
+					// Storing this in cache
+					$cache->store($cache_key, $html_content);
+				}
+
 
 				break;
 			}

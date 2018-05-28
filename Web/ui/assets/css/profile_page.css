@@ -51,11 +51,12 @@
 
   .pp-profile > .pp-profile-about-container {
     float: left;
+    width: 50%;
+    padding: 20px;
   }
 
   .pp-profile > .pp-profile-about-container > .pp-profile-name {
     padding: 5px;
-    margin-left: 10px;
   }
 
   .pp-profile > .pp-profile-about-container > .pp-profile-name > .pp-profile-name-main-text {
@@ -63,6 +64,5 @@
   }
 
   .pp-profile > .pp-about {
-    
   }
 }

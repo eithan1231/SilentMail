@@ -68,7 +68,7 @@ class filters
 		$username_length = strlen($username);
 		if($username_length < 3) {
 			return function_response(false, [
-				'message' => 'Exceeded username length'
+				'message' => 'Username too short'
 			]);
 		}
 
@@ -103,6 +103,37 @@ class filters
 			return function_response(false, [
 				'message' => htmlentities(character_name($username[$i])) .' character is not allowed in username.',
 			]);
+		}
+
+		// Checking resreved names
+		switch(strtolower($username))
+		{
+			case "index":
+			case "mail":
+			case "blog":
+			case "tos":
+			case "termsofservice":
+			case "terms":
+			case "terms-of-service":
+			case "contactus":
+			case "contact":
+			case "contact-us":
+			case "accesslogexporter":
+			case "node":
+			case "notification_redirect":
+			case "inboxattachmentdownloader":
+			case "inboxmaildownloader":
+			case "vinboxattachmentdownloader":
+			case "test":
+			case "favicon.ico":
+			case "__r.e.s.e.r.v.e.d":
+			case "index.php": {
+				return function_response(false, [
+					'message' => 'Reserved Name.'
+				]);
+			}
+
+			default: break;
 		}
 
 		return function_response(true, [

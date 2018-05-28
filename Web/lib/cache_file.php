@@ -108,6 +108,29 @@ class cache_file extends cache
   }
 
   /**
+  * Purges a cache key
+  *
+  * @param string $key
+  *   The key we want to purge
+  */
+  public function purge(string $key)
+  {
+    if(!$this->validKey($key)) {
+      return false;
+    }
+
+    $key_path = $this->getKeyPath($key);
+
+    if(file_exists($key_path)) {
+      unlink($key_path);
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
+
+  /**
   * Each key is linked with a file, this gets that file, and the path to it.
   *
   * @param string $key
@@ -115,7 +138,7 @@ class cache_file extends cache
   */
   private function getKeyPath(string $key)
   {
-    return $this->cache_dir . hash('sha256', $key);
+    return $this->cache_dir . versionHash . '_' . hash('sha256', $key);
   }
 
   /**

@@ -114,6 +114,20 @@ class router
 
 	public function registerRoute($method, $name, $route, callable $callback, $options = null)
 	{
+		if(is_array($route)) {
+			// Multiple patterns... lets register each of them.
+			foreach($route as $_route) {
+				$this->registerRoute(
+					$method,
+					$name,
+					$_route,
+					$callback,
+					$options
+				);
+			}
+			return;
+		}
+
 		// default options
 		if(!isset($options['append_global_query'])) {
 			$options['append_global_query'] = true;

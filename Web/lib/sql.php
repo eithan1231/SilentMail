@@ -127,6 +127,20 @@ class sql
 	}
 
 	/**
+	* Returns the value of the mysql function, LAST_INSERT_ID.
+	*/
+	public static function getLastInsertId()
+	{
+		$res = self::query_fetch("SELECT LAST_INSERT_ID() as id");
+
+		if($res === false) {
+			trigger_error("No last insert id.");
+		}
+
+		return $res['id'];
+	}
+
+	/**
 	* Escapes a parameter
 	*
 	* @param numeric|boolean|string $var

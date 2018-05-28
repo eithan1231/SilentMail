@@ -2,6 +2,8 @@
 
 class user
 {
+	private static $cache = [];
+
 	/**
 	* Checks if a user has password history
 	*
@@ -105,17 +107,23 @@ class user
 	*/
 	public static function getUserId($username)
 	{
+		$username_lower = strtolower($username);
+
+		if(isset(self::$cache[__FUNCTION__][$username_lower])) {
+			return self::$cache[__FUNCTION__][$username_lower];
+		}
+
 		$result = sql::query_fetch("
 			SELECT `id`
 			FROM `user`
 			WHERE
-				`username_lower` = ". sql::quote(strtolower($username)) ."
+				`username_lower` = ". sql::quote($username_lower) ."
 		");
 
 		if($result === false) {
 			return false;
 		}
 
-		return $result['id'];
+		return (self::$cache[__FUNCTION__][$username_lower] = $result['id']);
 	}
 }

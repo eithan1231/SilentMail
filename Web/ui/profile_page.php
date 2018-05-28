@@ -81,9 +81,14 @@ if(!$user_information['success']) {
             <span class="pp-profile-name-sub-text"><?= esc(misc::constructAddress($user_information['data']['username'])) ?></span>
           </div>
 
-          <div class="pp-about">
-
-          </div>
+          <p class="pp-about">
+            Infroamtion about the user. Infroamtion about the user. Infroamtion about the user.
+            Infroamtion about the user. Infroamtion about the user. Infroamtion about the user.
+            Infroamtion about the user. Infroamtion about the user. Infroamtion about the user.
+            Infroamtion about the user. Infroamtion about the user. Infroamtion about the user.
+            Infroamtion about the user. Infroamtion about the user. Infroamtion about the user.
+            Infroamtion about the user. Infroamtion about the user. Infroamtion about the user.
+          </p>
         </div>
       <?php endif; ?>
 

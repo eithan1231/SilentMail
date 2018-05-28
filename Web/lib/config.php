@@ -84,7 +84,30 @@ define("config", [
 		* Options for the mode, cache_mode_redis.
 		*/
 		'redis' => [
+			/**
+			* Amount of time we can store it in cache.
+			*/
+			'duration' => time_hour,
 
+			/**
+			* The redis nodes (can be an array, or one item)
+			*/
+			'nodes' => [
+				/**
+				* Host.
+				*/
+				'host' => '127.0.0.1',
+
+				/**
+				* Port.
+				*/
+				'port' => 0,
+
+				/**
+				* The authentication password. This is optional.
+				*/
+				'auth' => ''
+			],
 		],
 
 		/**
@@ -166,14 +189,18 @@ define("config", [
 	'trustedAttachmentMime' => [
 		'text/plain', 'image/png', 'image/jpg', 'image/jpeg',
 	],
+
+	'seed' => '<should_be_unique_to_your_site>'
 ]);
 
 // This ideally should never be true, but for some tests it's required.
 define("SKIP_REGISTRATION_SECURITY_CHECKS", (
+	// if development mode, hostname is localhost, and connection is a local,
+	// set true.
 	config['developmentMode'] && hostName == 'localhost' && (clientIp == '::1' || clientIp == "127.0.0.1")
 ));
 
 // tokens/hashes
-define("versionHash", hash('adler32', config['version']));
-define("uniqueToken", hash('md5', clientIp . versionHash . time . microTime));
-define("templateToken", hash('md5', versionHash . clientIp));
+define("versionHash", hash('adler32', config['seed'] . config['version']));
+define("uniqueToken", hash('md5', config['seed'] . clientIp . versionHash . time . microTime));
+define("templateToken", hash('md5', config['seed'] . versionHash . clientIp));

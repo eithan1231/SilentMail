@@ -12,7 +12,8 @@ class mailbox
 	*/
 	public static function getInboxAttachmentRoute($inbox_id, $internal_name)
 	{
-		return router::instance()->getRoutePath('inbox_attachment', [
+		global $route;
+		return $route->getRoutePath('inbox_attachment', [
 			'security_token' => security_token,
 			'inbox_id' => $inbox_id,
 			'internal_name' => $internal_name
@@ -28,7 +29,8 @@ class mailbox
 	*/
 	public static function getInboxMailRoute($inbox_id)
 	{
-		return router::instance()->getRoutePath('inbox_mail_download', [
+		global $route;
+		return $route->getRoutePath('inbox_mail_download', [
 			'security_token' => security_token,
 			'inbox_id' => $inbox_id
 		]);
@@ -36,12 +38,13 @@ class mailbox
 
 	/**
 	 * Downloads the raw mail object.
+	 *
 	 * @param integer $inbox_id
 	 * 	The inbox id you want to download
 	 * @param integer $user_id
 	 * 	Owner of the inbox
 	 */
-	public static function downloadMailItem($inbox_id, $user_id = ses_user_id)
+	public static function downloadInboxMailItem($inbox_id, $user_id = ses_user_id)
 	{
 		$inbox_item = mailbox::getInboxItem($inbox_id, $user_id, false);
 		if($inbox_item['success'] === false) {

@@ -43,6 +43,15 @@ switch(config['cache']['mode']) {
 		break;
 	}
 
+	case cache_mode_redis: {
+		global $cache;
+		$cache = new cache_file(
+			config['cache']['redis']['nodes'],
+			config['cache']['redis']['duration']
+		);
+		break;
+	}
+
 	case cache_mode_none:
 	default: {
 		global $cache;
@@ -171,7 +180,7 @@ $route->registerGetRoute('template', '/t/{token}/{name}', function($route, $p) {
 // =============================================================================
 // Landing page
 // =============================================================================
-$route->registerGetRoute('landing', '/', function($route) {
+$route->registerGetRoute('landing', ['/', '/index'], function($route) {
 	if(ses_awaiting_security_check) {
 		$route->redirectRoute("security_check");
 	}
@@ -185,7 +194,7 @@ $route->registerGetRoute('landing', '/', function($route) {
 // =============================================================================
 // Mailbox page
 // =============================================================================
-$route->registerGetRoute('mail', '/mail/', function($route) {
+$route->registerGetRoute('mail', ['/mail/', '/mail'], function($route) {
 	if(ses_awaiting_security_check) {
 		$route->redirectRoute("security_check");
 	}
@@ -202,7 +211,7 @@ $route->registerGetRoute('mail', '/mail/', function($route) {
 // =============================================================================
 // Authentication page. Will have Login, and Registration.
 // =============================================================================
-$route->registerGetRoute('authenticate', '/profile/authenticate', function($route, $p) {
+$route->registerGetRoute('authenticate', '/auth', function($route, $p) {
 	if(ses_awaiting_security_check) {
 		$route->redirectRoute("security_check");
 	}
@@ -218,7 +227,7 @@ $route->registerGetRoute('authenticate', '/profile/authenticate', function($rout
 // =============================================================================
 // Users' profile picture.
 // =============================================================================
-$route->registerGetRoute('profile_picture', '/profile/{username}/picture', function($route, $p) {
+$route->registerGetRoute('profile_picture', '/{username}/picture', function($route, $p) {
 
 });
 
@@ -228,15 +237,30 @@ $route->registerGetRoute('profile_picture', '/profile/{username}/picture', funct
 // =============================================================================
 // Users' profile page.
 // =============================================================================
-$route->registerGetRoute('profile_page', '/profile/{username}/', function($route, $p) {
-	if(ses_awaiting_security_check) {
-		$route->redirectRoute("security_check");
-	}
+$route->registerGetRoute(
+	'profile_page',
+	['/{username}', '/{username}/'],
+	function($route, $p) {
+		if(ses_awaiting_security_check) {
+			$route->redirectRoute("security_check");
+		}
 
-	define("PROFILE_PAGE_USERNAME", $p['username']);
+		if(!filters::isValidUsername($p['username'])) {
+			// continue search.
+			return true;
+		}
 
-	loadUi('profile_page');
-}, true);
+		if(user::getUserId($p['username']) === false) {
+			// User not found; continue search.
+			return true;
+		}
+
+		define("PROFILE_PAGE_USERNAME", $p['username']);
+
+		loadUi('profile_page');
+	},
+	true
+);
 
 
 
@@ -319,7 +343,7 @@ $route->registerPostRoute('api', '/api/{version}/{key}/{action}', function($rout
 // =============================================================================
 // Blog Landing Page
 // =============================================================================
-$route->registerGetRoute('blogLanding', '/blog/', function($route) {
+$route->registerGetRoute('blogLanding', ['/blog', '/blog/'], function($route) {
 	if(!config['blogEnabled']) {
 		$route->redirectRoute('landing');
 	}
@@ -334,7 +358,7 @@ $route->registerGetRoute('blogLanding', '/blog/', function($route) {
 // =============================================================================
 // Blog Category Viewer
 // =============================================================================
-$route->registerGetRoute('blogCategory', '/blog/{category}/', function($route, $p) {
+$route->registerGetRoute('blogCategory', ['/blog/{category}/', '/blog/{category}'], function($route, $p) {
 	if(!config['blogEnabled']) {
 		$route->redirectRoute('landing');
 	}
@@ -370,18 +394,23 @@ $route->registerGetRoute('blogNew', '/blog/{category}/new', function($route, $p)
 // =============================================================================
 // Blog Post Viewer
 // =============================================================================
-$route->registerGetRoute('blogPost', '/blog/{category}/{thread}', function($route, $p) {
-	if(!config['blogEnabled']) {
-		$route->redirectRoute('landing');
-	}
+$route->registerGetRoute(
+	'blogPost',
+	['/blog/{category}/{thread}', '/blog/{category}/{thread}/'],
+	function($route, $p) {
+		if(!config['blogEnabled']) {
+			$route->redirectRoute('landing');
+		}
 
-	// Defining variables so the post page has access to them.
-	define("BLOG_CATEGORY", $p['category']);
-	define("BLOG_THREAD", $p['thread']);
+		// Defining variables so the post page has access to them.
+		define("BLOG_CATEGORY", $p['category']);
+		define("BLOG_THREAD", $p['thread']);
 
-	// Loading post (thread) page.
-	loadUi("blog.post");
-}, config['blogEnabled']);
+		// Loading post (thread) page.
+		loadUi("blog.post");
+	},
+	config['blogEnabled']
+);
 
 
 
@@ -400,9 +429,13 @@ $route->registerGetRoute('robotsTxt', '/robots.txt', function($route, $p) {
 // =============================================================================
 // terms of service
 // =============================================================================
-$route->registerGetRoute('termsOfService', '/terms-of-service', function($route, $p) {
-	loadUi("terms_of_service");
-});
+$route->registerGetRoute(
+	'termsOfService',
+	['/terms-of-service', '/terms-of-service/', '/tos', '/tos/'],
+	function($route, $p) {
+		loadUi("terms_of_service");
+	}
+);
 
 
 
@@ -410,9 +443,13 @@ $route->registerGetRoute('termsOfService', '/terms-of-service', function($route,
 // =============================================================================
 // terms of service
 // =============================================================================
-$route->registerGetRoute('contactUs', '/contact-us', function($route, $p) {
-	loadUi("contact_us");
-});
+$route->registerGetRoute(
+	'contactUs',
+	['/contact-us', '/contact-us/'],
+	function($route, $p) {
+		loadUi("contact_us");
+	}
+);
 
 
 
@@ -585,7 +622,7 @@ $route->registerGetRoute(
 		);
 
 		if($security_token_verification['data']['valid']) {
-			$result = mailbox::downloadMailItem($p['inbox_id']);
+			$result = mailbox::downloadInboxMailItem($p['inbox_id']);
 
 			if(!$result['success']) {
 				header("Content-type: text/plain");

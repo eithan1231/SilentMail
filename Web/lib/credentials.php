@@ -299,7 +299,7 @@ class credentials
 		");
 
 		// Getting user id, probably better ways to do this, but o well.
-		$user_id = sql::query_fetch("SELECT LAST_INSERT_ID() as id")['id'];
+		$user_id = sql::getLastInsertId();
 
 		// Initialize user preferences (will insert default values.)
 		preferences::initializePreferences($user_id);
@@ -367,6 +367,7 @@ class credentials
 		$user_id,
 		string $current_password, string $new_password, string $new_password_verification
 	) {
+		global $cache;
 
 		// Comparing new password, and the new passworf verification
 		if($new_password !== $new_password_verification) {
@@ -447,6 +448,9 @@ class credentials
 				'message' => 'Internal Error (Password History)'
 			]);
 		}
+
+		// Password has been updated, so lets purge password history page cache
+		$cache->purge($cache->buildKey("ui-pw-history"));
 
 		// Updating password
 		if(sql::query("

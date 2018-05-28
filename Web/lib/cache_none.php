@@ -9,11 +9,16 @@ class cache_none extends cache
 
   public function get(string $key)
   {
-    return fase;
+    return false;
   }
 
   public function exists(string $key)
   {
-    return fase;
+    return false;
+  }
+
+  public function purge(string $key)
+  {
+    return false;
   }
 }
