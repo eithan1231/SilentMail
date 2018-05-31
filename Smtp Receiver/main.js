@@ -1,6 +1,6 @@
-var net = require('net');
-var config = require('./config/config.js');
-var command = require('./library/command.js');
+const net = require('net');
+const config = require('./config/config.js');
+const command = require('./library/command.js');
 
 process.on('uncaughtException', function(error) {
 
@@ -10,7 +10,7 @@ process.on('unhandledRejection', function(reason, p) {
 
 });
 
-var smtpServer = net.createServer();
+let smtpServer = net.createServer();
 
 smtpServer.on('connection', function(clientSock) {
   // Logging connection
@@ -18,8 +18,8 @@ smtpServer.on('connection', function(clientSock) {
   clientSock.setEncoding('utf8');
 
   // Variable for storing information with this specific connection
+  // Clent sock..
   let connectionInfo = {
-    // Clent sock..
     sock: clientSock,
 
     // the size of data (aka the mail object)

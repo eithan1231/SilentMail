@@ -1,8 +1,8 @@
-var config = require('../config/config.js');
-var url = require('url');
-var http = require('http');
+const config = require('../config/config.js');
+const url = require('url');
+const http = require('http');
 
-var node_interface = {};
+let node_interface = {};
 
 node_interface.mailboxExists = function(mailbox)
 {

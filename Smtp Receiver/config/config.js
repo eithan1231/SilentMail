@@ -1,4 +1,4 @@
-var config = {};
+let config = {};
 
 config.smtp = {};
 config.general = {};

@@ -1,4 +1,4 @@
-var parser = {};
+let parser = {};
 
 parser.parseMailboxParameter = function(parameter)
 {

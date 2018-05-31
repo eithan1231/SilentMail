@@ -1,8 +1,8 @@
-var parser = require('./parser.js');
-var node_interface = require('./node_interface.js');
-var isemail = require('isemail');
+const parser = require('./parser.js');
+const node_interface = require('./node_interface.js');
+const isemail = require('isemail');
 
-var command = {};
+let command = {};
 
 command.handle = function(connectionInfo, buffer) {
   return new Promise(function(resolve, reject) {
