@@ -207,6 +207,10 @@ class email_builder
 			$ret .= "Message-ID: ". misc::constructAddress($this->m_id) ."\r\n";
 		}
 
+		if($this->m_subject) {
+			$ret .= "Subject: ". remove_clrf($this->m_subject) ."\r\n";
+		}
+
 		// Adding other headers
 		if($this->m_headers) {
 			foreach($this->m_headers as $header) {

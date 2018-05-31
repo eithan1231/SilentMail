@@ -253,7 +253,8 @@ class template
 					<!-- State Success - output emails -->
 
 					<?php foreach ($outbox['data']['mail'] as $key => $value): ?>
-						<div id="mail-out-<?= esc($key); ?>" class="mailitem normal noselect">
+						<div id="mail-out-<?= esc($key); ?>" class="mailitem normal noselect"
+							onclick="Tab.changeTab('template-view-out-email', false, 'tab-body', 'id=<?= intval($value['id']); ?>')">
 							<div class="user-container">
 
 								<?php if($value['recipients_count'] > 1): ?>
@@ -582,9 +583,150 @@ class template
 					return false;
 				}
 
+				if(!isset($_GET['id'])) {
+					return false;
+				}
+
+				$id = intval($_GET['id']);
+
+				$cache_key = $cache->buildKey('outbox-item-body', [$id]);
+				$cached = $cache->exists($cache_key);
+
+				$outbox_item =  mailbox::getOutboxItem($id, ses_user_id, !$cached);
+
+				$body = "<h2 style=\"color: red;\">Unable to laod body</h2>";
+
+				if(!$cached && $outbox_item['data']['mail']) {
+					$mail = &$outbox_item['data']['mail'];
+					$mail_content_type = $mail->getContentType();
+
+					$handleMultipart = function(&$body_parts) use(&$handleMultipart, &$setBody) {
+						foreach($body_parts as &$body_part) {
+							if($body_part['content-type']['type'] === 'multipart') {
+								$handleMultipart($body_part['body-parts']);
+								continue;
+							}
+
+							if($body_part['content-type']['type'] === 'text') {
+								if($setBody($body_part['body'], $body_part['content-type'])) {
+									break;
+								}
+							}
+						}
+					};
+
+					$setBody = function($text, &$content_type) use(&$body) {
+						switch($content_type['subtype']) {
+							case "html": {
+								$body = html_sanitize::sanitize($text);
+								return true;
+							}
+
+							case "plain": {
+								$body = htmlspecialchars($text);
+								return true;
+							}
+
+							default: {
+								return false;
+							}
+						}
+					};
+
+					if($mail_content_type['type'] === 'text') {
+						$setBody($mail->getBody(), $mail_content_type);
+					}
+					else if($mail_content_type['type'] === 'multipart') {
+						$body_parts = $mail->getBodyParts();
+						$handleMultipart($body_parts);
+					}
+
+					// Storing in cache
+					$cache->store($cache_key, $body);
+				}
+				else if($cached) {
+					$body = $cache->get($cache_key);
+				}
+
 				?>
 
-				Viewing sent mail here
+				<div id="view-inbox-mail">
+					<div id="subject-container">
+						<span id="subject"><?= htmlentities(str_smallify($outbox_item['data']['subject'], 127)); ?></span>
+					</div>
+					<div id="sender-container">
+						<?php if($outbox_item['data']['sender_name'] == $outbox_item['data']['sender_address']): ?>
+							<span id="sender"><b><?= htmlentities($outbox_item['data']['sender_address']); ?></b></span>
+						<?php else: ?>
+							<span id="sender">
+								<span id="name"><?= htmlentities($outbox_item['data']['sender_name']); ?></span> &lt;<?= htmlentities($outbox_item['data']['sender_address']); ?>&gt;
+							</span>
+						<?php endif; ?>
+					</div>
+					<?php if (preferences::getPreference('technical_mode')): ?>
+						<div>
+							<a class="dropdown-link" href="#" onclick="ContextMenu.open('view-in-technical-dropdown'); return false;">
+								Technical Menu
+							</a>
+							<div class="dropdown dropdown-menu" id="view-in-technical-dropdown" hidden>
+								<h3 class="header">Technical</h3>
+
+								<?php if ($vbox_mode): ?>
+									<span>No vMail menu</span>
+								<?php else: ?>
+									<div class="item">
+										<a class="text" href="<?= mailbox::getInboxMailRoute($inbox_id) ?>" target="_blank">
+											Export Raw Mail
+										</a>
+									</div>
+								<?php endif; ?>
+							</div>
+						</div>
+					<?php endif; ?>
+
+					<div id="body-container">
+						<?= $body; ?>
+					</div>
+
+					<?php if($outbox_item['data']['mail_attachments_count'] > 0): ?>
+						<div class="noselect" id="attachment-container">
+							<?php foreach ($outbox_item['data']['mail_attachments'] as &$attachment): ?>
+								<?php
+								if(isset($attachment['inline']) && $attachment['inline']) {
+									continue;
+								}
+								?>
+
+								<div class="attachment" title="<?= htmlentities($attachment['name']); ?>">
+									<?php if ($vbox_mode): ?>
+										<a href="<?= vmailbox::getVBoxInboxAttachmentRoute($vbox_id, $inbox_id, $attachment['internal-name']); ?>" target="_blank">
+									<?php else: ?>
+										<a href="<?= mailbox::getInboxAttachmentRoute($inbox_id, $attachment['internal-name']); ?>" target="_blank">
+									<?php endif; ?>
+										<div class="icon">
+											<img src="<?= assetloader::getAssetPath(false, 'attachment', 'png'); ?>"></img>
+										</div>
+										<span class="name" title="<?= htmlentities($attachment['name']); ?>">
+											<?= htmlentities(str_smallify($attachment['name'], 9)); ?>
+										</span>
+									</a>
+								</div>
+							<?php endforeach; ?>
+						</div>
+					<?php endif; ?>
+
+					<div id="reply-container">
+						<input id="reply-recipient" type="hidden" value=""></input>
+						<input id="reply-subject" type="hidden" value=""></input>
+
+						<div>
+							<textarea id="reply-body" placeholder="Quick Reply"></textarea>
+						</div>
+
+						<button class="button">Submit</button>
+					</div>
+
+				</div>
 
 				<?php
 				break;
@@ -1255,9 +1397,9 @@ class template
 							$vbox_unread_count = vmailbox::getVBoxInboxUnreadCount($vbox['id']);
 							?>
 							<div class="item">
-								<span style="cursor:pointer;" onclick="TemplateEngine.getAndSetTemplate('template-virtual-manage', 'virtual-email-body', 'id=<?= $vbox['id']; ?>')" title="Manage">
+								<a href="#" style="cursor:pointer;" onclick="TemplateEngine.getAndSetTemplate('template-virtual-manage', 'virtual-email-body', 'id=<?= $vbox['id']; ?>'); return false;" title="Manage">
 									<img src="<?= assetloader::getInlineImage('setting-20', 'png') ?>" alt="[-]" height="16px" />
-								</span>
+								</a>
 								<a class="text" onclick="Tab.changeTab('template-inbox', 'tab-inbox', 'tab-body', 'vbox_id=<?= $vbox['id']; ?>')">
 									<?php if ($vbox['is_enabled']): ?>
 										<?php if ($vbox_unread_count > 0): ?>

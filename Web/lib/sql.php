@@ -19,14 +19,14 @@ class sql
 
 			mysqli_report(MYSQLI_REPORT_STRICT);
 
-			sql::$instance = mysqli_connect(
+			self::$instance = mysqli_connect(
 				config['sql']['hostname'],
 				config['sql']['username'],
 				config['sql']['password'],
 				config['sql']['database']
 			);
 
-			if(!sql::$instance) {
+			if(!self::$instance) {
 				return false;
 			}
 
@@ -36,6 +36,17 @@ class sql
 			exceptions::log($ex);
 			return false;
 		}
+	}
+
+	/**
+	* Prepares a SQL query
+	*
+	* @param string $query
+	*		Query to be prepared
+	*/
+	public static function prepare($query)
+	{
+		return self::$instance->prepare($query);
 	}
 
 	/**
@@ -51,14 +62,14 @@ class sql
 		$start_time = time();
 
 		// Executing the query
-		$result = mysqli_query(sql::$instance, $query);
+		$result = mysqli_query(self::$instance, $query);
 
 		// Calculating the time it too to query the data.
 		$ms_complete_time = microtime(true) - $ms_start_time;
 		$complete_time = time() - $start_time;
 
 		if(!$result) {
-			throw new Exception(sql::$instance->error);
+			throw new Exception(self::$instance->error);
 		}
 
 		if($start_time > 2 && config['reportSlowQueries']) {
@@ -158,7 +169,7 @@ class sql
 		}
 
 		if(is_float($var) || is_double($var)) {
-			return mysqli_real_escape_string(sql::$instance, (string)$var);
+			return mysqli_real_escape_string(self::$instance, (string)$var);
 		}
 		else if(is_numeric($var)) {
 			return intval($var);
@@ -167,7 +178,7 @@ class sql
 			return ($var === true ? '1' : '0');
 		}
 		else if(is_string($var)) {
-			$escaped = mysqli_real_escape_string(sql::$instance, $var);
+			$escaped = mysqli_real_escape_string(self::$instance, $var);
 
 			if($escaped === false) {
 				throw new Exception("Failed to escape string");
@@ -185,11 +196,11 @@ class sql
 	*/
 	public static function ping()
 	{
-		if(sql::$instance === false) {
+		if(self::$instance === false) {
 			return false;
 		}
 
-		return mysqli_ping(sql::$instance);
+		return mysqli_ping(self::$instance);
 	}
 
 	/**
@@ -205,6 +216,6 @@ class sql
 	*/
 	public static function close()
 	{
-		return mysqli_close(sql::$instance);
+		return mysqli_close(self::$instance);
 	}
 }

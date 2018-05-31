@@ -10,7 +10,7 @@ class assetloader
 	/**
 	* Gets a path to an asset.
 	*/
-	public static function getAssetPath(router $router, string $asset_name, string $extension)
+	public static function getAssetPath($router, string $asset_name, string $extension)
 	{
 		if(!assetloader::validAssetExtension($extension)) {
 			return false;

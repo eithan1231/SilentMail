@@ -64,6 +64,7 @@ class node
 			}
 
 			case "mb_new": {
+				echo "'$post_data'";
 				$data = json_decode($post_data, true);
 
 				if(

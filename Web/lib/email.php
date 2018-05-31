@@ -432,7 +432,12 @@ class email
 
 	public function getContentType()
 	{
-		return $this->m_bodyParsed['content-type'];
+		if($this->m_bodyParsed['content-type']) {
+			return $this->m_bodyParsed['content-type'];
+		}
+		else {
+			return '';
+		}
 	}
 
 	/**

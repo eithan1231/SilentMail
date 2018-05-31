@@ -62,6 +62,7 @@ define("config", [
 		*		cache_mode_file - Stores cache in files.
 		*		cache_mode_redis - Stores cache with redis.
 		*		cache_mode_memcached - Stores cache with memcached.
+		*		cache_mode_sql - Stores cache with attached sql database.
 		*/
 		'mode' => cache_mode_file,
 
@@ -116,11 +117,24 @@ define("config", [
 		'memcached' => [
 
 		],
+
+		/**
+		* Options for the mode, cache_mode_sql.
+		*/
+		'sql' => [
+
+			/**
+			* The duration the cache stays valid.
+			*/
+			'duration' => time_week,
+		]
 	],
 
 	/**
 	* This will allow us to cache UI assets. Turning this off will disable
 	* minifying.
+	*
+	* NOTE: This is ONLY for asset cache!
 	*/
 	'allowCache' => false,
 

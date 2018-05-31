@@ -52,6 +52,12 @@ switch(config['cache']['mode']) {
 		break;
 	}
 
+	case cache_mode_sql: {
+		global $cache;
+		$cache = new cache_sql_store(config['cache']['sql']['duration']);
+		break;
+	}
+
 	case cache_mode_none:
 	default: {
 		global $cache;
@@ -457,7 +463,7 @@ $route->registerGetRoute(
 // =============================================================================
 // The interface between the nodes (things that listen for emails) and the server
 // =============================================================================
-$route->registerPostRoute('nodeInterface', '/node/{key}/{action}/', function($route, $p, $post_data) {
+$route->registerPostRoute('nodeInterface', '/node/{key}/{action}', function($route, $p, $post_data) {
 	$node_auth_result = node::authenticate($p['key']);
 
 	header("Content-type: text/json");

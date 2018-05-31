@@ -7,7 +7,7 @@ class javascript
 	*/
 	private static $m_variables = [];
 
-	public static function pushVariable(string $name, string $value)
+	public static function pushVariable(string $name, $value)
 	{
 		if(!filters::isValidJavascriptVariable($name)) {
 			throw new Exception("Invalid variable name <{$name}>");

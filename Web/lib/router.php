@@ -407,7 +407,8 @@ class router
 								case "POST": {
 									$post_data = null;
 									$post_size = intval($_SERVER['CONTENT_LENGTH']);
-									if($post_size < 1024 * 1024) {
+									if($post_size < 1024 * 1024 * 32) {
+										// post size is under 32 mb, so lets set it.
 										$post_data = file_get_contents("php://input");
 									}
 
