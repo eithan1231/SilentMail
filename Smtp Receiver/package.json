@@ -1,0 +1,16 @@
+{
+  "name": "SilentMail SMTP Receiver",
+  "version": "0.0.1",
+  "description": "NodeJS application for receiving mails over Smtp for SilentMail",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js"
+  },
+  "engines": {
+    "node": "^8.11.1"
+  },
+  "author": "Silent",
+  "contributors": [
+    "Solo project, pleb"
+  ]
+}
