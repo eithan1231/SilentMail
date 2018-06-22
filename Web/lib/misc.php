@@ -10,7 +10,7 @@ class misc
 
 	public static function constructAddress($username)
 	{
-		return "{$username}@". config['mailDomain'];
+		return strtolower($username) ."@". config['mailDomain'];
 	}
 
 	public static function buildTitle($page_name)

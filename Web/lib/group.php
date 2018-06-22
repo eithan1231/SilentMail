@@ -12,7 +12,18 @@ class group
 		}
 
 		$result = sql::query_fetch("
-			SELECT `name`, `is_enabled`, `is_team`, `can_blog`, `virtual_address_limit`, `maximum_recipients`, `color`
+			SELECT
+				`name`,
+				`is_enabled`,
+				`is_team`,
+				`can_blog`,
+				`virtual_address_limit`,
+				`maximum_recipients`,
+				`color`,
+				`can_admin_groups`,
+				`can_admin_user`,
+				`can_admin_nodes`,
+				`can_admin_blogs`
 			FROM `group`
 			WHERE
 				`id` = ". sql::quote($group_id) ."

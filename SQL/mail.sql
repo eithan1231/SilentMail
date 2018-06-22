@@ -168,6 +168,10 @@ CREATE TABLE `group` (
   `is_enabled` tinyint(1) NOT NULL,
   `is_team` tinyint(1) NOT NULL,
   `can_blog` tinyint(1) NOT NULL,
+  `can_admin_user` tinyint(1) NOT NULL,
+  `can_admin_blogs` tinyint(1) NOT NULL,
+  `can_admin_nodes` tinyint(1) NOT NULL,
+  `can_admin_groups` tinyint(1) NOT NULL,
   `virtual_address_limit` int(10) UNSIGNED NOT NULL,
   `maximum_recipients` int(10) UNSIGNED NOT NULL,
   `color` varchar(10) NOT NULL
@@ -177,11 +181,11 @@ CREATE TABLE `group` (
 -- Dumping data for table `group`
 --
 
-INSERT INTO `group` (`id`, `name`, `is_enabled`, `is_team`, `can_blog`, `virtual_address_limit`, `maximum_recipients`, `color`) VALUES
-(1, 'Default', 1, 0, 0, 5, 1, '#4286f4'),
-(2, 'Disabled', 0, 0, 0, 0, 0, '#4286f4'),
-(3, 'Administrator', 1, 1, 0, 1000, 1000, '#4286f4'),
-(4, 'Elite', 1, 0, 0, 500, 20, '#4286f4');
+INSERT INTO `group` (`id`, `name`, `is_enabled`, `is_team`, `can_blog`, `can_admin_user`, `can_admin_blogs`, `can_admin_nodes`, `can_admin_groups`, `virtual_address_limit`, `maximum_recipients`, `color`) VALUES
+(1, 'Default', 1, 0, 0, 0, 0, 0, 0, 5, 1, '#4286f4'),
+(2, 'Disabled', 0, 0, 0, 0, 0, 0, 0, 0, 0, '#4286f4'),
+(3, 'Administrator', 1, 1, 0, 1, 1, 1, 1, 1000, 1000, '#4286f4'),
+(4, 'Elite', 1, 0, 0, 0, 0, 0, 0, 500, 20, '#4286f4');
 
 -- --------------------------------------------------------
 

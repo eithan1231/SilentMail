@@ -29,10 +29,10 @@ class geo
 
 		$result = sql::query_fetch("
 			SELECT
-				countries.country as country
-				countries.iso_code_2 as iso_code_2
-				countries.iso_code_3 as iso_code_3
-				countries.lat as lat
+				countries.country as country,
+				countries.iso_code_2 as iso_code_2,
+				countries.iso_code_3 as iso_code_3,
+				countries.lat as lat,
 				countries.lon as lon
 			FROM `ip_lookup`
 			RIGHT JOIN `countries`

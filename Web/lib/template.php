@@ -106,15 +106,15 @@ class template
 								<!--<div style="background-color:red;margin-right:3px;" class="circle" title="Unverified sender"></div>-->
 							<?php endif; ?>
 
-							<div class="user-container" title="Sender: <?= htmlentities($mail['sender_address']); ?>">
+							<div class="user-container" title="Sender: <?= esc($mail['sender_address']); ?>">
 								<span class="user-span">
-									<?= htmlentities(str_smallify($mail['sender_name'], /*18*/33)); ?>
+									<?= esc(str_smallify($mail['sender_name'], /*18*/33)); ?>
 								</span>
 							</div>
 
-							<div class="subject-container" title="Subject: <?= htmlentities($mail['subject']); ?>">
+							<div class="subject-container" title="Subject: <?= esc($mail['subject']); ?>">
 								<span class="subject-span">
-									<?= htmlentities(str_smallify($mail['subject'], 70)); ?>
+									<?= esc(str_smallify($mail['subject'], 70)); ?>
 								</span>
 							</div>
 
@@ -189,7 +189,7 @@ class template
 						?>
 					<?php endif; ?>
 				<?php else: ?>
-					<h2 class="noselect"><?= htmlentities($inbox['data']['message']); ?></h2>
+					<h2 class="noselect"><?= esc($inbox['data']['message']); ?></h2>
 				<?php endif; ?>
 				<?php
 				break;
@@ -258,12 +258,12 @@ class template
 							<div class="user-container">
 
 								<?php if($value['recipients_count'] > 1): ?>
-									<span class="user-span" title="<?= htmlentities($value['recipients'][0]); ?>">
+									<span class="user-span" title="<?= esc($value['recipients'][0]); ?>">
 										&lt;<?= htmlspecialchars(str_smallify($value['recipients'][0], 13)) ?>&gt; and <?= ($value['recipients_count'] - 1); ?> other<?= ($value['recipients_count'] > 2 ? 's' : ''); ?>.
 									</span>
 
 								<?php else: ?>
-									<span class="user-span" title="<?= htmlentities($value['recipients'][0]); ?>">
+									<span class="user-span" title="<?= esc($value['recipients'][0]); ?>">
 										<?= htmlspecialchars(str_smallify($value['recipients'][0], 28)); ?>
 									</span>
 
@@ -362,6 +362,11 @@ class template
 					return false;
 				}
 
+				$receipients = '';
+				if(isset($_GET['recipients'])) {
+					$receipients = $_GET['recipients'];
+				}
+
 				?>
 				<div id="componse-new">
 					<div class="input-div">
@@ -369,7 +374,7 @@ class template
 							<span class="span input-span">Recipients</span>
 						</div>
 
-						<input id="componse-recipients" type="text" placeholder="Recipients" title="For multiple, split them with a comma" autofocus></input>
+						<input id="componse-recipients" type="text" placeholder="Recipients" title="For multiple, split them with a comma" value="<?= esc($receipients) ?>" autofocus></input>
 					</div>
 
 
@@ -405,6 +410,7 @@ class template
 				}
 
 				if(!isset($_GET['id'])) {
+					die("no id");
 					return false;
 				}
 
@@ -490,14 +496,23 @@ class template
 
 				<div id="view-inbox-mail">
 					<div id="subject-container">
-						<span id="subject"><?= htmlentities(str_smallify($inboxy_item['data']['subject'], 127)); ?></span>
+						<span id="subject"><?= esc(str_smallify($inboxy_item['data']['subject'], 127)); ?></span>
 					</div>
 					<div id="sender-container">
 						<?php if($inboxy_item['data']['sender_name'] == $inboxy_item['data']['sender_address']): ?>
-							<span id="sender"><b><?= htmlentities($inboxy_item['data']['sender_address']); ?></b></span>
+							<!-- <span id="sender"><b><?= esc($inboxy_item['data']['sender_address']); ?></b></span> -->
+
+							<a
+								id="sender" class="black-a clean-a"
+								onclick="Tab.changeTab('template-new', false, 'tab-body', 'recipients=<?= urlencode($inboxy_item['data']['sender_address']) ?>'); return false;"
+								href="mailto:<?= esc($inboxy_item['data']['sender_address']); ?>"><b><?= esc($inboxy_item['data']['sender_address']); ?></b></a>
 						<?php else: ?>
 							<span id="sender">
-								<span id="name"><?= htmlentities($inboxy_item['data']['sender_name']); ?></span> &lt;<?= htmlentities($inboxy_item['data']['sender_address']); ?>&gt;
+								<span id="name"><?= esc($inboxy_item['data']['sender_name']); ?></span>
+								&lt;<a
+									class="black-a clean-a"
+									onclick="Tab.changeTab('template-new', false, 'tab-body', 'recipients=<?= urlencode($inboxy_item['data']['sender_address']) ?>'); return false;"
+									href="mailto:<?= esc($inboxy_item['data']['sender_address']); ?>"><?= esc($inboxy_item['data']['sender_address']); ?></a>&gt;
 							</span>
 						<?php endif; ?>
 					</div>
@@ -535,7 +550,7 @@ class template
 								}
 								?>
 
-								<div class="attachment" title="<?= htmlentities($attachment['name']); ?>">
+								<div class="attachment" title="<?= esc($attachment['name']); ?>">
 									<?php if ($vbox_mode): ?>
 										<a href="<?= vmailbox::getVBoxInboxAttachmentRoute($vbox_id, $inbox_id, $attachment['internal-name']); ?>" target="_blank">
 									<?php else: ?>
@@ -544,8 +559,8 @@ class template
 										<div class="icon">
 											<img src="<?= assetloader::getAssetPath(false, 'attachment', 'png'); ?>"></img>
 										</div>
-										<span class="name" title="<?= htmlentities($attachment['name']); ?>">
-											<?= htmlentities(str_smallify($attachment['name'], 9)); ?>
+										<span class="name" title="<?= esc($attachment['name']); ?>">
+											<?= esc(str_smallify($attachment['name'], 9)); ?>
 										</span>
 									</a>
 								</div>
@@ -652,14 +667,14 @@ class template
 
 				<div id="view-inbox-mail">
 					<div id="subject-container">
-						<span id="subject"><?= htmlentities(str_smallify($outbox_item['data']['subject'], 127)); ?></span>
+						<span id="subject"><?= esc(str_smallify($outbox_item['data']['subject'], 127)); ?></span>
 					</div>
 					<div id="sender-container">
 						<?php if($outbox_item['data']['sender_name'] == $outbox_item['data']['sender_address']): ?>
-							<span id="sender"><b><?= htmlentities($outbox_item['data']['sender_address']); ?></b></span>
+							<span id="sender"><b><?= esc($outbox_item['data']['sender_address']); ?></b></span>
 						<?php else: ?>
 							<span id="sender">
-								<span id="name"><?= htmlentities($outbox_item['data']['sender_name']); ?></span> &lt;<?= htmlentities($outbox_item['data']['sender_address']); ?>&gt;
+								<span id="name"><?= esc($outbox_item['data']['sender_name']); ?></span> &lt;<?= esc($outbox_item['data']['sender_address']); ?>&gt;
 							</span>
 						<?php endif; ?>
 					</div>
@@ -697,7 +712,7 @@ class template
 								}
 								?>
 
-								<div class="attachment" title="<?= htmlentities($attachment['name']); ?>">
+								<div class="attachment" title="<?= esc($attachment['name']); ?>">
 									<?php if ($vbox_mode): ?>
 										<a href="<?= vmailbox::getVBoxInboxAttachmentRoute($vbox_id, $inbox_id, $attachment['internal-name']); ?>" target="_blank">
 									<?php else: ?>
@@ -706,8 +721,8 @@ class template
 										<div class="icon">
 											<img src="<?= assetloader::getAssetPath(false, 'attachment', 'png'); ?>"></img>
 										</div>
-										<span class="name" title="<?= htmlentities($attachment['name']); ?>">
-											<?= htmlentities(str_smallify($attachment['name'], 9)); ?>
+										<span class="name" title="<?= esc($attachment['name']); ?>">
+											<?= esc(str_smallify($attachment['name'], 9)); ?>
 										</span>
 									</a>
 								</div>
@@ -777,15 +792,15 @@ class template
 										<div style="background-color:red;" class="circle" title="Unverified sender"></div>
 									<?php endif; ?>
 
-									<div class="user-container" title="Sender: <?= htmlentities($value['p2']); ?>">
+									<div class="user-container" title="Sender: <?= esc($value['p2']); ?>">
 										<span class="user-span">
-											<?= htmlentities(str_smallify($value['p2'], 18)); ?>
+											<?= esc(str_smallify($value['p2'], 18)); ?>
 										</span>
 									</div>
 
-									<div class="subject-container" title="Subject: <?= htmlentities($value['p3']); ?>">
+									<div class="subject-container" title="Subject: <?= esc($value['p3']); ?>">
 										<span class="subject-span">
-											<?= htmlentities(str_smallify($value['p3'], 70)); ?>
+											<?= esc(str_smallify($value['p3'], 70)); ?>
 										</span>
 									</div>
 
@@ -813,15 +828,15 @@ class template
 								?>
 								<div class="mailitem <?= ($value['p4'] ? 'seen' : 'normal'); ?> noselect" onclick="Tab.changeTab('template-view-in-email', false, 'tab-body', 'id=<?= $value['p1'] ?>&vbox_id=<?= $value['p1'] ?>')">
 
-									<div class="user-container" title="Sender: <?= htmlentities($value['p2']); ?>">
+									<div class="user-container" title="Sender: <?= esc($value['p2']); ?>">
 										<span class="user-span">
-											[vBox]<?= htmlentities(str_smallify($value['p2'], 16)); ?>
+											[vBox]<?= esc(str_smallify($value['p2'], 16)); ?>
 										</span>
 									</div>
 
-									<div class="subject-container" title="Subject: <?= htmlentities($value['p3']); ?>">
+									<div class="subject-container" title="Subject: <?= esc($value['p3']); ?>">
 										<span class="subject-span">
-											<?= htmlentities(str_smallify($value['p3'], 70)); ?>
+											<?= esc(str_smallify($value['p3'], 70)); ?>
 										</span>
 									</div>
 
@@ -853,12 +868,12 @@ class template
 									<div class="user-container">
 
 										<?php if($recipients_count > 1): ?>
-											<span class="user-span" title="<?= htmlentities($recipients[0]); ?>">
+											<span class="user-span" title="<?= esc($recipients[0]); ?>">
 												&lt;<?= htmlspecialchars(str_smallify($recipients[0], 13)) ?>&gt; and <?= ($recipients_count - 1); ?> other<?= ($recipients_count > 2 ? 's' : ''); ?>.
 											</span>
 
 										<?php else: ?>
-											<span class="user-span" title="<?= htmlentities($recipients[0]); ?>">
+											<span class="user-span" title="<?= esc($recipients[0]); ?>">
 												<?= htmlspecialchars(str_smallify($recipients[0], 28)); ?>
 											</span>
 
@@ -883,7 +898,7 @@ class template
 					}
 					?>
 				<?php else: ?>
-					<h2 class="noselect"><?= htmlentities($search_result['data']['message']); ?></h2>
+					<h2 class="noselect"><?= esc($search_result['data']['message']); ?></h2>
 				<?php endif; ?>
 
 				<?php
@@ -972,7 +987,7 @@ class template
 										</div>
 
 										<div class="column-value">
-											<?= htmlentities($login_attempt['ip']); ?>
+											<?= esc($login_attempt['ip']); ?>
 										</div>
 									</div>
 
@@ -981,8 +996,8 @@ class template
 											User Agent:
 										</div>
 
-										<div class="column-value" title="<?= htmlentities($login_attempt['user_agent']); ?>">
-											<?= htmlentities(str_smallify($login_attempt['user_agent'], 32)); ?>
+										<div class="column-value" title="<?= esc($login_attempt['user_agent']); ?>">
+											<?= esc(str_smallify($login_attempt['user_agent'], 32)); ?>
 										</div>
 									</div>
 								<?php endif; ?>
@@ -1029,7 +1044,7 @@ class template
 							<?php if ($year !== $last_year): ?>
 								<div class="year">
 									<h1 class="year-text">
-										<?= htmlentities($year); ?>
+										<?= esc($year); ?>
 									</h1>
 								</div>
 							<?php endif; ?>
@@ -1037,14 +1052,14 @@ class template
 							<?php if ($month !== $last_month || $year !== $last_year): ?>
 								<div class="month">
 									<h2 class="month-text">
-										<?= htmlentities($month); ?>
+										<?= esc($month); ?>
 									</h2>
 								</div>
 							<?php endif; ?>
 
 							<div class="item">
 								<a href="<?= notifications::getRedirectRoute($notification['id']); ?>" target="_blank">
-									<?= htmlentities($notification['text']); ?>
+									<?= esc($notification['text']); ?>
 								</a>
 							</div>
 
@@ -1403,13 +1418,13 @@ class template
 								<a class="text" onclick="Tab.changeTab('template-inbox', 'tab-inbox', 'tab-body', 'vbox_id=<?= $vbox['id']; ?>')">
 									<?php if ($vbox['is_enabled']): ?>
 										<?php if ($vbox_unread_count > 0): ?>
-											<?= htmlentities(str_smallify(misc::constructAddress($vbox['username']), 20)); ?>
+											<?= esc(str_smallify(misc::constructAddress($vbox['username']), 20)); ?>
 											<span style="color:#717171;font-size:11px;">[<?= $vbox_unread_count ?>]</span>
 										<?php else: ?>
-											<?= htmlentities(str_smallify(misc::constructAddress($vbox['username']), 20)); ?>
+											<?= esc(str_smallify(misc::constructAddress($vbox['username']), 20)); ?>
 										<?php endif; ?>
 									<?php else: ?>
-										<span style="text-decoration:line-through"><?= htmlentities(str_smallify(misc::constructAddress($vbox['username']), 20)); ?></span>
+										<span style="text-decoration:line-through"><?= esc(str_smallify(misc::constructAddress($vbox['username']), 20)); ?></span>
 									<?php endif; ?>
 								</a>
 							</div>
@@ -1441,7 +1456,7 @@ class template
 
 				<div id="virtual-email-new-container">
 					<div class="input-container">
-						<input type="text" id="vbox-username" class="input-text" maxlength="64" autofocus><span class="domain-text noselect">@<?= htmlentities(config['mailDomain']); ?></span>
+						<input type="text" id="vbox-username" class="input-text" maxlength="64" autofocus><span class="domain-text noselect">@<?= esc(config['mailDomain']); ?></span>
 					</div>
 
 					<div class="noselect" id="virtual-email-new-status-container" hidden>
@@ -1494,7 +1509,7 @@ class template
 
 							<div class="value">
 								<span class="text">
-									<?= htmlentities(misc::constructAddress($vbox_info['username'])); ?>
+									<?= esc(misc::constructAddress($vbox_info['username'])); ?>
 								</span>
 							</div>
 						</div>

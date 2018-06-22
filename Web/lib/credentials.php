@@ -283,7 +283,7 @@ class credentials
 
 		$result = sql::query("
 			INSERT INTO `user`
-			(`id`, `username`, `username_lower`, `password`, `salt`, `group_id`, `force_security`, `name_first`, `name_last`, `country`)
+			(`id`, `username`, `username_lower`, `password`, `salt`, `group_id`, `force_security`, `name_first`, `name_last`, `country`, `picture_userfiles_id`)
 			VALUES (
 				NULL,
 				". sql::quote($username) .",
@@ -294,7 +294,8 @@ class credentials
 				0,
 				". sql::quote($first_name) .",
 				". sql::quote($last_name) .",
-				". sql::quote($iso_code_2) ."
+				". sql::quote($iso_code_2) .",
+				0
 			)
 		");
 

@@ -48,13 +48,13 @@ class autoload
 		});
 	}
 
-	public static function include(string$file)
+	public static function include(string $file)
 	{
 		$file = strtolower($file);
 
 		foreach (autoload::$paths as $path) {
 			// Generating path location
-			$path .= '\\' . $file . '.php';
+			$path .= '/' . $file . '.php';
 
 			// Making sure the class file exists
 			if(file_exists($path)) {

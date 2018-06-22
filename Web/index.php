@@ -85,7 +85,7 @@ $route->registerSpecial("404", function($path) {
 	loadUi("special.404");
 });
 $route->registerSpecial("500", function($exception) {
-	output_page::SetHttpStatus(500, "Internal Error");
+	output_page::SetHttpStatus(500, "Internal Error From Route");
 
 	if(config['developmentMode']) {
 		header("Content-type: text/plain");
@@ -241,6 +241,22 @@ $route->registerGetRoute('profile_picture', '/{username}/picture', function($rou
 
 
 // =============================================================================
+// If a account is flagged, we will challenge the user to remove it here.
+// =============================================================================
+if(ses_awaiting_security_check) {
+	$route->registerGetRoute(
+		'security_check',
+		'/'. hash('md5', clientIp . ses_user_id .'securitycheck'),
+		function($route, $p) {
+			loadUi("security_check");
+		}
+	);
+}
+
+
+
+
+// =============================================================================
 // Users' profile page.
 // =============================================================================
 $route->registerGetRoute(
@@ -267,22 +283,6 @@ $route->registerGetRoute(
 	},
 	true
 );
-
-
-
-
-// =============================================================================
-// If a account is flagged, we will challenge the user to remove it here.
-// =============================================================================
-if(ses_awaiting_security_check) {
-	$route->registerGetRoute(
-		'security_check',
-		'/'. hash('md5', clientIp . ses_user_id .'securitycheck'),
-		function($route, $p) {
-			loadUi("security_check");
-		}
-	);
-}
 
 
 

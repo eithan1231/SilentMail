@@ -3,14 +3,18 @@
 */
 var Tab = new function() {
 	this.changeTab = function(templateName, tabButtonId, tabBodyId, templateQuery = false, callback = false) {
-		TemplateEngine.getTemplate(templateName, function(content) {
-			Tab.setTabContent(content, tabBodyId);
+		TemplateEngine.getAndSetTemplate(templateName, tabBodyId, templateQuery, function(content) {
 			Tab.setSelectedButton(tabButtonId);
 
 			if(callback !== false) {
 				callback();
 			}
-		}, templateQuery);
+		});
+
+		/*TemplateEngine.getTemplate(templateName, function(content) {
+			Tab.setTabContent(content, tabBodyId);
+
+		}, templateQuery);*/
 	}
 
 	this.setTabContent = function(content, tabBodyId) {

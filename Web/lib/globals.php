@@ -16,6 +16,11 @@ if(cookies::getSession() !== false) {
 
 			$group_information = group::getGroupInformation(ses_group_id);
 			if($group_information['success']) {
+				define('ses_group_can_admin_groups', $group_information['data']['can_admin_groups']);
+				define('ses_group_can_admin_user', $group_information['data']['can_admin_user']);
+				define('ses_group_can_admin_nodes', $group_information['data']['can_admin_nodes']);
+				define('ses_group_can_admin_blogs', $group_information['data']['can_admin_blogs']);
+				define('ses_group_can_blog', $group_information['data']['can_blog']);
 				define('ses_group_name', $group_information['data']['name']);
 				define('ses_group_enabled', $group_information['data']['is_enabled']);
 				define('ses_group_is_team', $group_information['data']['is_team']);
@@ -37,6 +42,11 @@ if(!defined('ses_username')) {
 	define("ses_group_id", false);
 }
 if(!defined('ses_group_name')) {
+	define('ses_group_can_admin_groups', false);
+	define('ses_group_can_admin_user', false);
+	define('ses_group_can_admin_nodes', false);
+	define('ses_group_can_admin_blogs', false);
+	define('ses_group_can_blog', false);
 	define('ses_group_name', 'Unregistered');
 	define('ses_group_enabled', true);
 	define('ses_group_is_team', false);

@@ -19,6 +19,11 @@ class request_check
 			die("Contact administrator, GB library not installed<br /><br />Read <a href=\"http://php.net/manual/en/book.image.php\">this</a> for more information.");
 		}
 
+		if(!class_exists('mysqli')) {
+			output_page::SetHttpStatus(500, 'Internal Error');
+			die("Contact administrator, Mysqli library not installed.");
+		}
+
 		// Checking if there are any verified hosts
 		if(count(config['trustedHosts']) == 0) {
 			output_page::SetHttpStatus(500, 'Internal Error');
@@ -26,8 +31,12 @@ class request_check
 		}
 
 		// Checking this is a verified host
-		if(!isset($_SERVER['HTTP_HOST']) ||
-			!in_array($_SERVER['HTTP_HOST'], config['trustedHosts'])
+		if(
+			!isset($_SERVER['HTTP_HOST']) ||
+			(
+				!in_array($_SERVER['HTTP_HOST'], config['trustedHosts']) &&
+				$_SERVER['HTTP_HOST'] !== 'smtpNode'
+			)
 		) {
 			output_page::SetHttpStatus(401, 'Unauthorized');
 			die();
@@ -36,11 +45,6 @@ class request_check
 		if(!isset($_SERVER['HTTP_USER_AGENT'])) {
 			output_page::SetHttpStatus(500, 'Internal Error');
 			die("User agent not found.");
-		}
-
-		if(!isset($_SERVER['HTTP_HOST'])) {
-			output_page::SetHttpStatus(500, 'Internal Error');
-			die("Host not found.");
 		}
 
 		// Now lets connect to database...

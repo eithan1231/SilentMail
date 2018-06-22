@@ -2,6 +2,10 @@
 $router = router::Instance();
 $notifications = notifications::getUnread();
 $notifications_count = ($notifications === false ? 0 : count($notifications));
+
+$tab_body_id = "tab-body";
+
+javascript::pushVariable('main_page_id', $tab_body_id);
 ?>
 <!DOCTYPE html>
 <html>
@@ -34,7 +38,10 @@ $notifications_count = ($notifications === false ? 0 : count($notifications));
 		window.onload = function() {
 			ContextMenu.initialize();
 			Library.initialize();
-			Tab.changeTab('template-inbox', 'tab-inbox', 'tab-body');
+			TemplateEngine.loadFromHash(function() {
+				// Failed to load from hash
+				Tab.changeTab('template-inbox', 'tab-inbox', 'tab-body');
+			})
 		};
 		</script>
 	</head>
@@ -61,12 +68,12 @@ $notifications_count = ($notifications === false ? 0 : count($notifications));
 						<a href="javascript://" class="text" onclick="ContextMenu.open('notification-dropdown'); return false; ">
 							Notifications
 							<?php if ($notifications_count > 0): ?>
-								<span class="count"><?= $notifications_count ?></span>
+								<span class="count"><?= esc(strval($notifications_count)) ?></span>
 							<?php endif; ?>
 						</a>
 						<div id="notification-dropdown" class="dropdown" hidden>
 							<div class="item">
-								<a href="#" onclick="Tab.changeTab('template-notifications', false, 'tab-body'); return false;">
+								<a href="#" onclick="Tab.changeTab('template-notifications', false, '<?= $tab_body_id ?>'); return false;">
 									<span class="item-text">
 										All Notifications
 									</span>
@@ -90,19 +97,19 @@ $notifications_count = ($notifications === false ? 0 : count($notifications));
 				</div>
 
 				<div class="sidebar-item">
-					<a href="javascript://" class="text" onclick="Tab.changeTab('template-general-settings', false, 'tab-body'); return false;">
+					<a href="javascript://" class="text" onclick="Tab.changeTab('template-general-settings', false, '<?= $tab_body_id ?>'); return false;">
 						General Settings
 					</a>
 				</div>
 
 				<div class="sidebar-item">
-					<a href="javascript://" class="text" title="Virtual mail." onclick="Tab.changeTab('template-virtual-emails', false, 'tab-body');  return false;">
+					<a href="javascript://" class="text" title="Virtual mail." onclick="Tab.changeTab('template-virtual-emails', false, '<?= $tab_body_id ?>');  return false;">
 						vMail
 					</a>
 				</div>
 
 				<div class="sidebar-item">
-					<a href="javascript://"  class="text" onclick="Tab.changeTab('template-login-logs', false, 'tab-body'); return false;">
+					<a href="javascript://"  class="text" onclick="Tab.changeTab('template-login-logs', false, '<?= $tab_body_id ?>'); return false;">
 						Access Logs
 					</a>
 				</div>
@@ -123,19 +130,64 @@ $notifications_count = ($notifications === false ? 0 : count($notifications));
 					</a>
 				</div>
 
+				<?php if (
+					ses_group_can_admin_user ||
+					ses_group_can_admin_blogs ||
+					ses_group_can_admin_nodes ||
+					ses_group_can_admin_groups
+				): ?>
+
+					<div style="margin-top: 30px;">
+						<span style="margin-left: 20px; font-size: 13px;">-- Administrative --</span>
+					</div>
+
+					<?php if (ses_group_can_admin_user): ?>
+						<div class="sidebar-item">
+							<a href="javascript://"  class="text" onclick="Tab.changeTab('template-login-logs', false, '<?= $tab_body_id ?>'); return false;">
+								Manage Users
+							</a>
+						</div>
+					<?php endif; ?>
+
+					<?php if (ses_group_can_admin_blogs): ?>
+						<div class="sidebar-item">
+							<a href="javascript://"  class="text" onclick="Tab.changeTab('template-login-logs', false, '<?= $tab_body_id ?>'); return false;">
+								Manage Blog
+							</a>
+						</div>
+					<?php endif; ?>
+
+					<?php if (ses_group_can_admin_nodes): ?>
+						<div class="sidebar-item">
+							<a href="javascript://"  class="text" onclick="Tab.changeTab('template-login-logs', false, '<?= $tab_body_id ?>'); return false;">
+								Manage Nodes
+							</a>
+						</div>
+					<?php endif; ?>
+
+					<?php if (ses_group_can_admin_groups): ?>
+						<div class="sidebar-item">
+							<a href="javascript://"  class="text" onclick="Tab.changeTab('template-login-logs', false, '<?= $tab_body_id ?>'); return false;">
+								Manage User Groups
+							</a>
+						</div>
+					<?php endif; ?>
+
+				<?php endif; ?>
+
 				<?php if (preferences::getPreference('technical_mode')): ?>
 					<div style="margin-top: 30px;">
 						<span style="margin-left: 20px; font-size: 13px;">-- Developers --</span>
 					</div>
 
 					<div class="sidebar-item">
-						<a href="javascript://" class="text" onclick="Tab.changeTab('template-api', false, 'tab-body'); return false;">
+						<a href="javascript://" class="text" onclick="Tab.changeTab('template-api', false, '<?= $tab_body_id ?>'); return false;">
 							API
 						</a>
 					</div>
 
 					<div class="sidebar-item">
-						<a href="javascript://" class="text" onclick="Tab.changeTab('template-web-hooks', false, 'tab-body'); return false;">
+						<a href="javascript://" class="text" onclick="Tab.changeTab('template-web-hooks', false, '<?= $tab_body_id ?>'); return false;">
 							Web Hooks
 						</a>
 					</div>
@@ -145,26 +197,26 @@ $notifications_count = ($notifications === false ? 0 : count($notifications));
 			<div id="tab-container">
 
 				<div id="tab-heading" class="noselect">
-					<div id="tab-inbox" class="tab-control normal" onclick="Tab.changeTab('template-inbox', 'tab-inbox', 'tab-body'); return false;">
+					<div id="tab-inbox" class="tab-control normal" onclick="Tab.changeTab('template-inbox', 'tab-inbox', '<?= $tab_body_id ?>'); return false;">
 						<div class="tab-control-inner-div">
 							Inbox
 						</div>
 					</div>
 
-					<div id="tab-sent" class="tab-control normal" onclick="Tab.changeTab('template-sent', 'tab-sent', 'tab-body'); return false;">
+					<div id="tab-sent" class="tab-control normal" onclick="Tab.changeTab('template-sent', 'tab-sent', '<?= $tab_body_id ?>'); return false;">
 						<div class="tab-control-inner-div">
 							Outbox
 						</div>
 					</div>
 
-					<div id="tab-new" class="tab-control normal" onclick="Tab.changeTab('template-new', 'tab-new', 'tab-body'); return false;">
+					<div id="tab-new" class="tab-control normal" onclick="Tab.changeTab('template-new', 'tab-new', '<?= $tab_body_id ?>'); return false;">
 						<div class="tab-control-inner-div">
 							Compose
 						</div>
 					</div>
 
 				</div>
-				<div id="tab-body">
+				<div id="<?= $tab_body_id ?>">
 					<noscript>
 						<!-- No Javascript... -->
 						<h1>Javascript not found!</h1>
