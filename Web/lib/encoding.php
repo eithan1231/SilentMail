@@ -14,13 +14,17 @@ class encoding
 	*/
 	public static function convert(string $in, string $encoding)
 	{
-		$encoding = str_replace('-', '', $encoding);
 		$encoding = strtolower($encoding);
 
 		switch($encoding) {
 			case "b64":
-			case "base64": {
+			case "base64":
+			case "base-64": {
 				return encoding::fromBase64($in);
+			}
+
+			case "quoted-printable": {
+				return quoted_printable_decode($in);
 			}
 
 			default: {

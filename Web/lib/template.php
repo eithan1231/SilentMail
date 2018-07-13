@@ -452,23 +452,30 @@ class template
 							}
 
 							if($body_part['content-type']['type'] === 'text') {
-								if($setBody($body_part['body'], $body_part['content-type'])) {
+								if($setBody($body_part['body-content'], $body_part['content-type'])) {
 									break;
 								}
 							}
 						}
 					};
 
-					$setBody = function($text, &$content_type) use(&$body) {
+					$setBody = function($text, &$content_type) use(&$body, $vbox_mode, $inbox_id) {
 						switch($content_type['subtype']) {
 							case "html": {
-								$body = html_sanitize::sanitize($text);
+								if($vbox_mode) {
+									$body = html_sanitize::sanitize($text);
+								}
+								else {
+									$body = html_sanitize::sanitize($text, 1, [
+										'mailbox_item' => ['inbox_id' => $inbox_id]
+									]);
+								}
 								return true;
 							}
 
 							case "plain": {
 								$body = htmlspecialchars($text);
-								return true;
+								return false;// text/plain is good enough, but lets just continue search.
 							}
 
 							default: {
@@ -490,6 +497,14 @@ class template
 				}
 				else if($cached) {
 					$body = $cache->get($cache_key);
+				}
+
+				// Getting amount of inline attachments (inline are not shown)
+				$inline_attachment_count = 0;
+				foreach ($inboxy_item['data']['mail_attachments'] as $value) {
+					if(isset($value['inline']) && $value['inline']) {
+						$inline_attachment_count++;
+					}
 				}
 
 				?>
@@ -541,11 +556,14 @@ class template
 						<?= $body; ?>
 					</div>
 
-					<?php if($inboxy_item['data']['mail_attachments_count'] > 0): ?>
+					<?php if(
+						$inboxy_item['data']['mail_attachments_count'] > 0 &&
+						$inboxy_item['data']['mail_attachments_count'] != $inline_attachment_count
+						): ?>
 						<div class="noselect" id="attachment-container">
 							<?php foreach ($inboxy_item['data']['mail_attachments'] as &$attachment): ?>
 								<?php
-								if(isset($attachment['inline']) && $attachment['inline']) {
+								if($attachment['inline']) {
 									continue;
 								}
 								?>
@@ -1577,6 +1595,110 @@ class template
 					put a virtual email address. This way you will not get irritating updates
 					in your main mailbox, or any other types unneeded mail.
 				</p>
+				<?php
+
+				break;
+			}
+
+			case "template-admin-user-search": {
+				if(!ses_logged_in) {
+					return false;
+				}
+
+				if(ses_awaiting_security_check) {
+					return false;
+				}
+
+				if(!ses_group_can_admin_user) {
+					return false;
+				}
+
+				?>
+				<div id="admin-user-search-container">
+					<div style="width: 50%">
+						<p>
+							If you are looking for a user, enter the name below. Once you've
+							entered the name, you can either clck on the dropdown menu, or
+							press enter. Pressing enter will select the name at the top of
+							the list.
+						</p>
+
+						<p>
+							<b>Query Instructions:</b>
+							<br><br>
+
+							<b><small>exact</small></b> - Finds the exact username (case insensitive)
+							<br><br>
+
+							<b><small>uid</small></b> - Queries for a user's id rather than their username
+							<br><br>
+
+							To use an instruction, you simply type the instruction, followed
+							by ":", then the value of the instruction. So a valid instruction
+							should look as such; "exact:James". There should not be any spaces,
+							if you need a space, use the plus key. So a instruction's value
+							with a space should look like, "exact:James+Bond". It's as simple
+							as that!
+						</p>
+					</div>
+					<input type="text" style="clean-textbox" id="admin-search-user" placeholder="Username" onkeyup="admin.handleUserWildcardSearch(event);">
+					<div id="admin-user-query-list">
+					</div>
+				</div>
+				<?php
+
+				break;
+			}
+
+			case "template-admin-user-manage": {
+				if(!ses_logged_in) {
+					return false;
+				}
+
+				if(ses_awaiting_security_check) {
+					return false;
+				}
+
+				if(!ses_group_can_admin_user) {
+					return false;
+				}
+
+				if(!isset($_GET['user_id'])) {
+					return false;
+				}
+
+				if(($user_info = user::getUserInformation($_GET['user_id']))['success']) {
+					$user_info = $user_info['data'];
+				}
+				else {
+					die('<h2>User not found</h2>');
+				}
+
+				if(!$user_info['manageable'] && $user_info['id'] != ses_user_id) {
+					die('<h2 title="User is protected">This user is not manageable</h2>');
+				}
+
+				if(($group_info = group::getGroupInformation($user_info['group_id']))['success']) {
+					$group_info = $group_info['data'];
+				}
+				else {
+					die('<h2>Users group cannot be found (must be assigned to a invalid group)</h2>');
+				}
+
+				?>
+				<div id="admin-user-manage-container">
+					<div class="heading"><!-- Headings -->
+						<div style="margin-bottom: 7px;">
+							<div title="Assigned group color." class="group-color-dot" style="background-color: <?= esc($group_info['color']) ?>">
+								<!-- Username color dot-->
+							</div>
+							<span class="username"><?= esc(misc::constructAddress($user_info['username'])) ?></span>
+						</div>
+						<div>
+							<span class="fullname"><?= esc(clean_name($user_info['name_full'])) ?></span>
+						</div>
+					</div>
+				</div>
 				<?php
 
 				break;

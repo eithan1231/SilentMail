@@ -55,3 +55,7 @@ define('cache_mode_file', 1);
 define('cache_mode_redis', 2);
 define('cache_mode_memcached', 3);
 define('cache_mode_sql', 4);
+
+define("sm_webhook_sslpolicy_none", 0);// No SSL policy; allow ssl or non ssl.
+define("sm_webhook_sslpolicy_force", 1);// Must have SSL.
+define("sm_webhook_sslpolicy_disallow", 2);// SSL is strictly not allowed.

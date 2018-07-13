@@ -13,7 +13,7 @@ class sql
 	public static function connect()
 	{
 		try {
-			if(sql::ping()) {
+			if(self::ping()) {
 				return true;
 			}
 
@@ -57,6 +57,10 @@ class sql
 	*/
 	public static function query($query)
 	{
+		if(config['sql']['maxPacketSize'] < mb_strlen($query)) {
+			throw new Exception("Query exceeded limit");
+		}
+
 		// Getting start time (in second, and micro second.)
 		$ms_start_time = microtime(true);
 		$start_time = time();
@@ -72,19 +76,88 @@ class sql
 			throw new Exception(self::$instance->error);
 		}
 
-		if($start_time > 2 && config['reportSlowQueries']) {
+		if($complete_time > 2 && config['reportSlowQueries']) {
 			shutdown_events::register(function() {
-				// TODO: Write slow query reporter.
+				// TODO: Write slow query reporter, dont just exception it....
+				exceptions::log(new Exception("SlowQuery: ". base64_encode($query)));
 			});
 		}
 
-		sql::$query_history[] = [
+		self::$query_history[] = [
 			'microtime' => $ms_start_time,
 			'time' => $complete_time,
 			'query' => $query
 		];
 
 		return $result;
+	}
+
+	/**
+	* I found a need to insert multiple values at once, and it's generally a bad
+	* idea to do a query for each one, so this will insert with the smallest
+	* query amount possible.
+	*
+	*
+	*/
+	public static function insertMultipleValue($table, $columns, $values)
+	{
+		$values_count = count($values);
+
+		/**
+		* Builds a CSV ((C)omma (S)eperated (V)alue)
+		*
+		* @param array $arr
+		*		The array we are extracting the CSV values from
+		* @param string $quote_mode
+		*		The mode we want to quote the values with.
+		*		Possible Modes:
+		*			sql - SQL safe
+		*			none - No quoting, this is default.
+		*/
+		$buildCSV = function(array $arr, string $quote_mode = 'none') {
+			$quote_mode = strtolower($quote_mode);
+			$result = "";
+			$arr_len = count($arr);
+			foreach ($arr as $key => $value) {
+				switch ($quote_mode) {
+					case 'sql':
+						$result .= self::quote($value);
+						break;
+
+					case 'none':
+					default:
+						$result .= $value;
+						break;
+				}
+				if($key < $arr_len - 1) {
+					$result .= ',';
+				}
+			}
+			return $result;
+		};
+
+		$query_base = "
+			INSERT INTO `{$table}`
+			(". $buildCSV($columns, 'none') .")
+			VALUES
+		";
+
+		$query = $query_base;
+		foreach ($values as $key => $value) {
+			$insert_param = "(". $buildCSV($value, "sql") .")";
+
+			if(
+				mb_strlen($query) + mb_strlen($insert_param) > config['sql']['maxPacketSize'] ||
+				$key == $values_count - 1
+			) {
+				$query .= $insert_param;
+				self::query($query);
+				$query = $query_base;
+			}
+			else {
+				$query .= $insert_param .',';
+			}
+		}
 	}
 
 	/**
@@ -95,7 +168,7 @@ class sql
 	*/
 	public static function query_fetch($query)
 	{
-		$res = sql::query($query);
+		$res = self::query($query);
 
 		if($res === false) {
 			return false;
@@ -116,7 +189,7 @@ class sql
 	*/
 	public static function query_fetch_all($query)
 	{
-		$res = sql::query($query);
+		$res = self::query($query);
 
 		if($res === false) {
 			return false;
@@ -208,7 +281,7 @@ class sql
 	*/
 	public static function get_queries()
 	{
-		return sql::$query_history;
+		return self::$query_history;
 	}
 
 	/**
@@ -217,5 +290,14 @@ class sql
 	public static function close()
 	{
 		return mysqli_close(self::$instance);
+	}
+
+	public static function wildcardEscape($to_escape)
+	{
+		return str_replace(
+			['%', '_', '*'],
+			['\\%', '\\_', '\\*'],
+			$to_escape
+		);
 	}
 }

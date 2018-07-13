@@ -57,12 +57,14 @@ class user
 	{
 		$result = sql::query_fetch("
 			SELECT
-				username,
-				name_first,
-				name_last,
-				CONCAT(name_first, ' ', name_last) as name_full,
-				group_id,
-				force_security
+				`id`,
+				`username`,
+				`name_first`,
+				`name_last`,
+				CONCAT(name_first, ' ', name_last) AS name_full,
+				`group_id`,
+				`force_security`,
+				`manageable`
 			FROM `user`
 			WHERE
 				`id` = ". sql::quote($user_id) ."

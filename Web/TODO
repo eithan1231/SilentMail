@@ -47,7 +47,7 @@ DONE 10) (ETA: 5m) Censor sensitive information on exception logging backtraces.
 
 12) (ETA: 1h) Write more tests.
 
-13) (ETA: 1d) HTML Sanitizer.
+DONE 13) (ETA: 1d) HTML Sanitizer.
 
 DONE 14) (ETA: 40m) Password template.
 
@@ -78,7 +78,7 @@ DONE 14) (ETA: 40m) Password template.
 	responsive. So, Make a standard CSS lib that can be used everywhere.
 
 19) Templating to CSS files. So we can access variables from PHP (useful for
-	backgrounds, colos, etc.)
+	backgrounds, colors, etc.)
 
 20) Settings
 	20.1) Profile picture. This profile picture must be 200 by 200 pixels. This
@@ -90,3 +90,39 @@ DONE 22) Cache. Have the expandability to implement redis, or other memory based
 	key/value database engines. We also need to cache the rendering of pages
 	viewing mail items, so we dont reparse them all the time.... bad idea to
 	reparse...
+
+23) (ETA: ?) Image proxy for emails. To prevent IP leaking, we want an image proxy.
+	But if someone uses cloudflare, proxying it with the server could/can render
+	cloudflare useless. So we need to implement functionality for a http proxy,
+	or for it to send it to a sub domain what points to another server.
+	!!!!!!!!!!!!!!!!!!!!! NOTE: we are currently just redirecting to the image link
+	so ip leaks are happening.
+
+24) (ETA: 40m) Prefix all constants with "SM_", meaning, "SILENT-MAIL". It's just
+	a matter of opening and replacing certain strings on all .php extension files.
+	This could be done with a simple script.
+
+25) (ETA: 1h)Restructure the asset loader. We are currently loading all scripts and styles
+	separately (different requests), remake the asset loader in such a way they
+	are all merged into one.
+
+26) Completely remove router::instance(). We should be getting it from the global
+	variable.
+
+27) Reimplement searching with slightly different methods. Rather than searching
+	for the exact word, search for the 'soundex' of said word. This will make
+	searches more tolerant to spelling mistakes.
+
+27) Make some queries more efficient. I.E. when we are inserting keywords for
+	later searches in the inbox_keywords, outbox_keywords, and vinbox_keywords,
+	we need to make the queries longer. So rather than inserting one at a time,
+	insert 4-5. Whatever fits under the mysql max packet size.
+
+28) (ETA: 30m) In a lot of places we use strlen, rather than mb_strlen. This shoundn't
+	matter because the only encoding we have support for is UTF-8/ANSII. But for
+	future support, we should use mb_length. So replace strlen with mb_strlen.
+
+29) (ETA: 30m) Update the configuration. We should have the config encoded in JSON,
+	This is so we can update the config from an update manager in the future.
+	With this, we could also have a config manager script (of-course I would make
+	this script require executing from command-line).

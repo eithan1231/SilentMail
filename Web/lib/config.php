@@ -6,7 +6,7 @@ if(defined('config')) {
 
 define("config", [
 	/* The current version */
-	'version' => '0.1',
+	'version' => '0.2',
 
 	/* Name of your project. Will in included in titles, and other places. */
 	'projectName' => 'SilentMail',
@@ -131,6 +131,107 @@ define("config", [
 	],
 
 	/**
+	* Settings for web hooks.
+	*/
+	'webhook' => [
+		/**
+		* Enable and disable webhooks.
+		*/
+		'enabled' => true,
+
+		/**
+		* Do you want to be in local mode? Local mode will run the http requests
+		* on the current web server. If this is set to false, it will push them to
+		* a webhook node.
+		*/
+		'localMode' => false,
+
+		/**
+		* The policy regarding SSL on webhooks. I would recommend leaving this as
+		* the default. Only reason I could see you changing this, is if you want to
+		* enforce strong security standards, and dont want any non-secured
+		* connections.
+		*
+		* NOTE: Changing this will not affect existing webhooks!
+		*
+		* sm_webhook_sslpolicy_none:
+		*		Webhooks URL's can connect with either SSL, or non-SSL.
+		* sm_webhook_sslpolicy_force:
+		*		Webhooks URL's MUST have SSL.
+		* sm_webhook_sslpolicy_disallow:
+		*		Webhooks URL's must NOT have SSL.
+		*/
+		'sslPolicy' => sm_webhook_sslpolicy_none,
+
+		/**
+		* An array of webhook nodes.
+		*
+		* NOTE: For these to be used, local mode must be set to false.
+		*/
+		'nodes' => [
+			/**
+			* Node 1
+			*/
+			[
+				/**
+				* Whether or not it's enabled.
+				*/
+				'enabled' => true,
+
+				/**
+				* The node's endpoint.
+				*/
+				'endpoint' => [
+					/**
+					* The hostname, or ip, of the node. Something we can connect to.
+					*/
+					'host' => '127.0.0.1',
+
+					/**
+					* The TCP port the http server is hosted on.
+					*/
+					'port' => 3434,
+
+					/**
+					* The authentication key
+					*/
+					'key' => 'replaceme'
+				]
+			],
+
+			/**
+			* Node 2
+			*/
+			[
+				/**
+				* Whether or not it's enabled.
+				*/
+				'enabled' => false,
+
+				/**
+				* The node's endpoint.
+				*/
+				'endpoint' => [
+					/**
+					* The hostname, or ip, of the node. Something we can connect to.
+					*/
+					'host' => '127.0.0.1',
+
+					/**
+					* The TCP port the http server is hosted on.
+					*/
+					'port' => 3434,
+
+					/**
+					* The authentication key
+					*/
+					'key' => 'replaceme'
+				]
+			]
+		]
+	],
+
+	/**
 	* This will allow us to cache UI assets. Turning this off will disable
 	* minifying.
 	*
@@ -144,16 +245,30 @@ define("config", [
 	/* The URL path to this projects folder, example is as follows. */
 	'dirFromRoot' => '/',
 
-	/* sql credentials */
+	/**
+	* MySQL information.
+	*
+	* NOTE: Everything uses mysqli_*, and prepared statements are rarely used.
+	*/
 	'sql' => [
 		'username' => 'root',
 		'password' => '',
 		'hostname' => '127.0.0.1',
 		'database' => 'mail',
+
+		/**
+		* The largest SQL packet size in bytes. By default, its 1MB,
+		*/
+		'maxPacketSize' => 1024 * 1024
 	],
 
-	/* The domain that will be at the end of email addresses. */
-	'mailDomain' => 'localhost',
+	/**
+	* The domain that will be at the end of email addresses.
+	*
+	* NOTE: localhost will be considered invalid. (Some things may fail to
+	* function if this is localhost)
+	*/
+	'mailDomain' => 'example.com',
 
 	/* List of resuted hosts, not connecting from one will result in page death */
 	'trustedHosts' => ['localhost', "127.0.0.1"],
@@ -201,9 +316,12 @@ define("config", [
 	* All non trusted will be sent with application/octet-stream
 	*/
 	'trustedAttachmentMime' => [
-		'text/plain', 'image/png', 'image/jpg', 'image/jpeg',
+		'text/plain', 'image/png', 'image/jpg', 'image/jpeg', 'image/x-icon',
 	],
 
+	/**
+	* Seed for your site, this should be random, and long.
+	*/
 	'seed' => '<should_be_unique_to_your_site>'
 ]);
 

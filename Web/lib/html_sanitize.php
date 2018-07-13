@@ -2,9 +2,9 @@
 
 class html_sanitize
 {
-	public static function sanitize($html)
+	public static function sanitize($html, $c = 1, $settings = array())
 	{
-		// TODO: Complete this.
-		return "<h2>Not yet HTML compatible. The displayed output <b>WILL</b> be wrong!</h2><br/>". htmlspecialchars(strip_tags($html));
+		autoload::include('dependencies/htmLawed');
+		return htmLawed($html, $c, $settings);
 	}
 }

@@ -1,6 +1,85 @@
 <?php
 
 /**
+* This function extracts an instruction from a query. An example query would be,
+* "cat fish site:facebook.com cat fish". "site" is the instruction, and
+* "facebook.com" is the value.
+*
+* @param string $instruction
+*		The name of instruction.
+* @param string $query
+*		The query the instruction is held in
+* @param bool $remove
+*		If the instruction is true, and $remove is true, this will remove the
+*		instruction and value from from the $query.
+*/
+function extract_instruction(string $instruction, string &$query, $remove = false) {
+	$instruction_lower = strtolower($instruction);
+	$query_lower = strtolower($query);
+	$value = '';
+
+	if(($pos = strpos($query_lower, "{$instruction_lower}:")) !== false) {
+		$instruction_length = strlen($instruction);
+		$query_length = strlen($query);
+
+		// Placing the position at the start of the instructions value.
+		$pos += $instruction_length + 1;
+
+		// Getting the end of the instruction value.
+		$end_pos = $pos;
+		while($end_pos < $query_length) {
+			if(
+				$query[$end_pos] === " " ||
+				$query[$end_pos] === "\r" ||
+				$query[$end_pos] === "\n" ||
+				$query[$end_pos] === "\t"
+			) {
+				break;
+			}
+
+			$end_pos++;
+		}
+
+		// Making sure the instruction value is long-ish
+		if($end_pos - $pos <= 0) {
+			// Value is non-existant
+			return false;
+		}
+
+		// Getting the value
+		$value = str_replace('+', ' ', substr($query, $pos, $end_pos - $pos));
+
+		// Possibly removing instruction + value from query
+		if($remove) {
+			$query = substr_outter(
+				$query,
+				$pos - ($instruction_length + 1),
+				$end_pos - $pos + $instruction_length + 1
+			);
+		}
+
+		// Returning the instructions value.
+		// NOTE: This is returned in an array for expandability. I want to be able
+		// to extract multiple different instructions in the same query, but it's
+		// not needed at this point of time.
+		return [$value];
+	}
+	return false;
+}
+
+/**
+* Rather than substracting 2 parts of a string, and returning the inner data,
+* this will return the outter data. so, this can be an example string "test cat"
+* substr($examplestring, 0, 4), would return "test", with this function, it
+* would return " cat".
+*/
+function substr_outter($str, $start, $length)
+{
+	$str_len = strlen($str);
+	return substr($str, 0, $start) . substr($str, $start + $length);
+}
+
+/**
 * Cleans a name. Will auto capitalize, etc.
 */
 function clean_name(string $name)

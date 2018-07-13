@@ -1,1 +1,6 @@
 User Agent Parser: https://github.com/donatj/PhpUserAgent
+  UserAgent parser.
+
+HTML Sanitizer: https://github.com/GerHobbelt/HTMLawed
+  This is used in the sanitization of html emails. It's also modified to get
+  inline attachments.

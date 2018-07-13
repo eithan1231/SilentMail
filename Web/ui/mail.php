@@ -29,6 +29,14 @@ javascript::pushVariable('main_page_id', $tab_body_id);
 		<script type="text/javascript" src="<?= assetloader::getAssetPath($router, "vbox", "js"); ?>"></script>
 		<script type="text/javascript" src="<?= assetloader::getAssetPath($router, "newmail", "js"); ?>"></script>
 		<script type="text/javascript" src="<?= assetloader::getAssetPath($router, "auth", "js"); ?>"></script>
+		<?php if (
+			ses_group_can_admin_user ||
+			ses_group_can_admin_blogs ||
+			ses_group_can_admin_nodes ||
+			ses_group_can_admin_groups
+		): ?>
+		<script type="text/javascript" src="<?= assetloader::getAssetPath($router, "admin", "js"); ?>"></script>
+		<?php endif; ?>
 
 		<!-- JS Snippet -->
 		<?php javascript::getJsSnippet(); ?>
@@ -143,7 +151,7 @@ javascript::pushVariable('main_page_id', $tab_body_id);
 
 					<?php if (ses_group_can_admin_user): ?>
 						<div class="sidebar-item">
-							<a href="javascript://"  class="text" onclick="Tab.changeTab('template-login-logs', false, '<?= $tab_body_id ?>'); return false;">
+							<a href="javascript://"  class="text" onclick="Tab.changeTab('template-admin-user-search', false, '<?= $tab_body_id ?>'); return false;">
 								Manage Users
 							</a>
 						</div>

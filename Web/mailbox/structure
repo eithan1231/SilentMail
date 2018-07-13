@@ -1,0 +1,10 @@
+/<user_id> / 1000
+	/<user_id>
+		/inbox
+			/<inbox_id>
+				/attachments
+				/mail
+		/outbox
+			/<outbox_id>
+				/attachments
+				/mail

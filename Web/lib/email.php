@@ -46,6 +46,11 @@ class email
 		$ret['body'] = &$body;
 		$ret['headers'] = &$headers;
 
+		// Convert all encodings.
+		if(isset($ret['headers']['content-transfer-encoding'])) {
+			$ret['body-content'] = encoding::convert($body, $ret['headers']['content-transfer-encoding']);
+		}
+
 		switch ($content_type['type']) {
 			// =======================================================================
 			// Multipart/*
@@ -508,10 +513,7 @@ class email
 
 					$content = false;
 					if($get_content === true) {
-						$content = ($encoding === false
-							? $body_part['body']
-							: encoding::convert($body_part['body'], $encoding)
-						);
+						$content = encoding::convert($body_part['body'], $encoding);
 					}
 
 
@@ -519,7 +521,7 @@ class email
 					// example, user sends an image with the content id "cidexample," and
 					// in the html it has an image tag with the src url scheme being "cid:"
 					// it will generate a link to this assets attachment and replace the
-					// src tag.
+					// src attr.
 					$content_id = cryptography::randomString(32);
 					if(isset($body_part['headers']['content-id'])) {
 						$content_id = $body_part['headers']['content-id'];

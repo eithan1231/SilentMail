@@ -204,6 +204,75 @@ class mailbox
 		return function_response(true, $result);
 	}
 
+	public static function loadInboxInlineAsset($inbox_id, $content_id, $user_id = ses_user_id)
+	{
+		global $cache;
+
+		$loadAttachmentAsset = function($attachment) use($inbox_id, $user_id, $content_id) {
+			$inbox_item_path = misc::getInboxPath($user_id, $inbox_id);
+			$attachment_path = "{$inbox_item_path}attachments/{$attachment['internal-name']}";
+
+			if(file_exists($attachment_path)) {
+				$mime = $attachment['content-type']['type'] .'/'. $attachment['content-type']['subtype'];
+				if(in_array($mime, config['trustedAttachmentMime'])) {
+					header("Content-Length: ". filesize($attachment_path));
+					header("Content-Type: {$mime}");
+					header("Content-Disposition: inline; filename=\"{$attachment['internal-name']}\"");
+					header("Cache-Control: max-age=3600");
+					readfile($attachment_path);
+					die();
+				}
+				else {
+					output_page::SetHttpStatus(500, "Unknown mime type");
+					return function_response(false, [
+						'message' => 'Unknown mime type'
+					]);
+				}
+			}
+			else {
+				output_page::SetHttpStatus(500, "File not found");
+				return function_response(false, [
+					'message' => 'File (Attachment) not found'
+				]);
+			}
+		};
+
+		$cache_key = $cache->buildKey('inbox-inline-asset', [$inbox_id, $content_id]);
+		if($cache->exists($cache_key)) {
+			$cached_attachment = $cache->get($cache_key);
+			return $loadAttachmentAsset($cached_attachment);
+		}
+
+		$mail = self::getInboxItem($inbox_id, $user_id, false);
+		if(!$mail['success']) {
+			return $mail;
+		}
+
+		foreach($mail['data']['mail_attachments'] as $key => $attachment) {
+			if($attachment['inline'] && isset($attachment['content-id'])) {
+				if(
+					($open = strpos($attachment['content-id'], '<')) !== false &&
+					($close = strrpos($attachment['content-id'], '>')) !== false
+				) {
+					$attachment_content_id = substr(
+						$attachment['content-id'],
+						$open + 1,
+						$close - $open - 1
+					);
+
+					if($attachment_content_id == $content_id) {
+						$cache->store($cache_key, $attachment);
+						return $loadAttachmentAsset($attachment);
+					}
+				}
+			}
+		}
+
+		return function_response(false, [
+			'message' => 'Content ID not found'
+		]);
+	}
+
 	/**
 	* Marks an inbox item (email) as read
 	*/
@@ -422,21 +491,24 @@ class mailbox
 						continue;
 					}
 
-					// Inserting keywords
-					foreach($keywords as &$keyword) {
-						$keyword_cleaned = filters::cleanKeyword($keyword);
-						if(filters::isValidKeyword($keyword_cleaned)) {
-							sql::query("
-								INSERT INTO `inbox_keywords`
-								(`inbox_id`, `receiver`, `word`)
-								VALUES (
-									". sql::quote($inbox_id) .",
-									". sql::quote($user_id) .",
-									". sql::quote($keyword_cleaned) ."
-								)
-							");
+					$insert_values = [];
+					foreach ($keywords as $keyword) {
+						$keyword = filters::cleanKeyword($keyword);
+						if(filters::isValidKeyword($keyword)) {
+							$insert_values[] = [
+								$inbox_id,
+								$user_id,
+								$keyword,
+								metaphone($keyword)
+							];
 						}
 					}
+					sql::insertMultipleValue('inbox_keywords', [
+						'inbox_id',
+						'receiver',
+						'word',
+						'metaphone'
+					], $insert_values);
 
 					// Getting working directory for things like attachments.
 					$working_directory = misc::getInboxPath($user_id, $inbox_id);
@@ -725,20 +797,24 @@ class mailbox
 
 		// Inserting keywords
 		$keywords = $mail_processed->getKeywords();
-		foreach($keywords as &$keyword) {
-			$keyword_cleaned = filters::cleanKeyword($keyword);
-			if(filters::isValidKeyword($keyword_cleaned)) {
-				sql::query("
-					INSERT INTO `outbox_keywords`
-					(`outbox_id`, `sender`, `word`)
-					VALUES (
-						". sql::quote($outbox_id) .",
-						". sql::quote($user_id) .",
-						". sql::quote($keyword_cleaned) ."
-					)
-				");
+		$insert_values = [];
+		foreach ($keywords as $keyword) {
+			$keyword = filters::cleanKeyword($keyword);
+			if(filters::isValidKeyword($keyword)) {
+				$insert_values[] = [
+					$outbox_id,
+					$user_id,
+					$keyword,
+					metaphone($keyword)
+				];
 			}
 		}
+		sql::insertMultipleValue('outbox_keywords', [
+			'outbox_id',
+			'sender',
+			'word',
+			'metaphone'
+		], $insert_values);
 
 		return function_response(false, [
 			'message' => "Hey Kid! TODO: Mailbox::sendMail."

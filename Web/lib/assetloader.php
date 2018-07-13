@@ -144,7 +144,7 @@ class assetloader
 	public static function getInlineImage(string $image_name, string $extension)
 	{
 		$extension = strtolower($extension);
-		$asset_name = strtolower($asset_name);
+		$image_name = strtolower($image_name);
 
 		// making sure it's a verified/trusted extension
 		if(!assetloader::validAssetExtension($extension)) {

@@ -19,12 +19,13 @@ autoload::Initialize(WORK_DIR ."/lib/");
 autoload::include('functions');
 request_check::check();
 autoload::include('globals');
+autoload::include('htmlawed');
 
 // Starting exception handler
 exceptions::initializeHandler();
 
-// Logging request.
-logs::logRequest();
+// Logging request on shutdown - It's not of utmost importance right now.
+shutdown_events::register('logs::logRequest', false);
 
 // Disabling error reporting in non-development
 if(!config['developmentMode']) {
@@ -116,6 +117,9 @@ $route->registerSpecial('append', function() {
 	if(config['outputBuffering'] <= 0) {
 		ob_end_flush();
 	}
+
+	// Running the shutdown event before SQL is closed..
+	shutdown_events::run();
 
 	// Closing mysql connection, not needed anymore.
 	sql::close();
@@ -454,6 +458,51 @@ $route->registerGetRoute(
 	['/contact-us', '/contact-us/'],
 	function($route, $p) {
 		loadUi("contact_us");
+	}
+);
+
+
+
+
+// =============================================================================
+// Image proxy
+// =============================================================================
+$route->registerGetRoute(
+	'imageProxy',
+	'/imgproxy/{image}',
+	function($route, $p) {
+		image_proxy::outputProxiedImage($p['image']);
+	}
+);
+
+
+
+
+// =============================================================================
+// Inline image
+// =============================================================================
+$route->registerGetRoute(
+	'inboxInlineAsset',
+	'/inline_asset/{inbox_id}/{content_id}',
+	function($route, $p) {
+		$res = mailbox::loadInboxInlineAsset($p['inbox_id'], $p['content_id']);
+		if(!$res['success']) {
+			die($res['data']['message']);
+		}
+	}
+);
+
+
+
+
+// =============================================================================
+// URL redirect
+// =============================================================================
+$route->registerGetRoute(
+	'urlRedirect',
+	'/url/{url}',
+	function($route, $p) {
+		header("location: " .$p['url']);
 	}
 );
 

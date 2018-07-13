@@ -192,7 +192,7 @@ class tests
 
 				$email = new email_builder(
 					"(". config['projectName'] .") Test Account",
-					misc::constructAddress("__r.e.s.e.r.v.e.d"),
+					misc::constructAddress("reserved"),
 					$_GET['subject']
 				);
 
@@ -200,7 +200,7 @@ class tests
 				$email->addBody($_GET['body'], 'text/plain');
 
 				$success = mailbox::insertInbox(
-					misc::constructAddress("__r.e.s.e.r.v.e.d"),
+					misc::constructAddress("reserved"),
 					[misc::constructAddress($user['data']['username'])],
 					$email->constructMail()
 				);

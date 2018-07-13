@@ -2,6 +2,11 @@
 
 class misc
 {
+	public static function buildUserAgent()
+	{
+		return str_replace(" ", '', config['projectName']) .'-UA/v'. config['version'];
+	}
+
 	public static function getUserfilePath($parent_dir_1, $parent_dir_2, $parent_dir_3, $filename)
 	{
 		$filename = misc::cleanFileName($filename);

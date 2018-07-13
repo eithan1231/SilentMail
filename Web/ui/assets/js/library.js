@@ -99,6 +99,7 @@ var Library = new function() {
 	*/
 	this.mouseMiner = function()
 	{
+		return;//NOTE: Removed until implemented.
 		let mousemoveHandler = function(pos) {
 			console.log('mouse');
 
