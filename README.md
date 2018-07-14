@@ -1,6 +1,10 @@
 # Silent mail
 is a free and open source mail program. It currently only has the support of receiving mail, but plans to send mail are being worked on. If you are looking for a live demo, head over to https://www.silentmail.us. The UI part of things are a we-bit bad, but it functions as needed.
 
+# Known Bugs
+As some of you might notice, there are many bugs. Here are some that are known.
+1) TODO: Remember bug that was just created. /duh
+
 # Installation
 
 ## Prerequisites
