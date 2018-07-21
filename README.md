@@ -3,7 +3,7 @@ is a free and open source mail program. It currently only has the support of rec
 
 # Known Bugs
 As some of you might notice, there are many bugs. Here are some that are known.
-1) TODO: Remember bug that was just created. /duh
+1) URL Working Path failing to work correctly in router.php
 
 # Installation
 
